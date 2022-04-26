@@ -1,2 +1,2 @@
-# front-end-template
+# substrate-front-end-template
 substrate区块链前端
