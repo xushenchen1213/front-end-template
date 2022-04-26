@@ -21,7 +21,9 @@ import Metadata from './Metadata'
 import NodeInfo from './NodeInfo'
 import TemplateModule from './TemplateModule'
 import Transfer from './Transfer'
+import Authorization from './Authorization'
 import Upgrade from './Upgrade'
+import Community from './Community'
 
 function Main() {
   const { apiState, apiError, keyringState } = useSubstrateState()
@@ -75,7 +77,9 @@ function Main() {
           </Grid.Row>
           <Grid.Row>
             <Transfer />
+            <Authorization />
             <Upgrade />
+            <Community />
           </Grid.Row>
           <Grid.Row>
             <Interactor />
