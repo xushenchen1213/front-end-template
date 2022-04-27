@@ -34,6 +34,11 @@
     "@polkadot/ui-settings": "^1.1.1",
     "@polkadot/util": "^8.4.1",
     "@polkadot/util-crypto": "^8.4.1",
+    "antd": "^4.20.1",
+    "axios": "^0.27.1",
+    "fs": "^0.0.1-security",
+    "mysql": "^2.18.1",
+    "net": "^1.0.2",
     "node-polyfill-webpack-plugin": "^1.1.4",
     "prop-types": "^15.8.1",
     "react": "^17.0.2",
@@ -42,7 +47,9 @@
     "react-scripts": "^5.0.0",
     "semantic-ui-css": "Semantic-Org/Semantic-UI-CSS#master",
     "semantic-ui-react": "^2.1.2",
-    "stream-browserify": "^3.0.0"
+    "stream-browserify": "^3.0.0",
+    "tls": "^0.0.1",
+    "xlsx": "^0.18.5"
   },
   "devDependencies": {
     "eslint": "^8.10.0",
