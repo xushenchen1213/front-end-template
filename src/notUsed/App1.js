@@ -9,25 +9,22 @@ import {
 } from 'semantic-ui-react'
 import 'semantic-ui-css/semantic.min.css'
 
-import { SubstrateContextProvider, useSubstrateState } from './substrate-lib'
-import { DeveloperConsole } from './substrate-lib/components'
+import { SubstrateContextProvider, useSubstrateState } from '../substrate-lib'
+import { DeveloperConsole } from '../substrate-lib/components'
 
-// import Router from './Routes/index.js'
-import AccountSelector from './AccountSelector'
-// import Frame from './components/Frame/Index'
-// import Apppp from './Apppp'
-import Balances from './Balances'
-import BlockNumber from './BlockNumber'
-import Events from './Events'
-// import Interactor from './Interactor'
-import Metadata from './Metadata'
-import NodeInfo from './NodeInfo'
-import TemplateModule from './TemplateModule'
-import Transfer from './Transfer'
-// import Authorization from './Authorization'
-// import Upgrade from './Upgrade'
-import Community from './Community'
-import Contract from './Contract'
+import AccountSelector from '../AccountSelector'
+import Balances from '../Balances'
+import BlockNumber from '../BlockNumber'
+import Events from '../Events'
+import Interactor from './Interactor'
+import Metadata from '../Metadata'
+import NodeInfo from '../NodeInfo'
+import TemplateModule from '../TemplateModule'
+import Transfer from '../Transfer'
+import Authorization from '../Authorization'
+import Upgrade from './Upgrade'
+import Community from '../Community'
+// import Sider from './Sider'
 
 
 function Main() {
@@ -71,8 +68,6 @@ function Main() {
         <AccountSelector />
       </Sticky>
       <Container>
-        {/* <Router></Router> */}
-        {/* <Apppp /> */}
         <Grid stackable columns="equal">
           <Grid.Row stretched>
             <NodeInfo />
@@ -85,16 +80,13 @@ function Main() {
           </Grid.Row>
           <Grid.Row>
             <Transfer />
-            {/* <Authorization /> */}
-            {/* <Upgrade /> */}
+            <Authorization />
+            <Upgrade />
             <Community />
           </Grid.Row>
           <Grid.Row>
-            {/* <Interactor /> */}
+            <Interactor />
             <Events />
-          </Grid.Row>
-          <Grid.Row>
-            <Contract />
           </Grid.Row>
           <Grid.Row>
             <TemplateModule />
@@ -102,6 +94,7 @@ function Main() {
         </Grid>
       </Container>
       <DeveloperConsole />
+
     </div>
   )
 }

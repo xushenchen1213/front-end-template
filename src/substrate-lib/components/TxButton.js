@@ -69,6 +69,7 @@ function TxButton({
 
   const sudoTx = async () => {
     const fromAcct = await getFromAcct()
+    console.log(fromAcct);
     const transformed = transformParams(paramFields, inputParams)
     // transformed can be empty parameters
     const txExecute = transformed
@@ -98,6 +99,7 @@ function TxButton({
 
   const signedTx = async () => {
     const fromAcct = await getFromAcct()
+    console.log(fromAcct);
     const transformed = transformParams(paramFields, inputParams)
     // transformed can be empty parameters
 

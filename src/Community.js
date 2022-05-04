@@ -1,6 +1,7 @@
 // excel.js
 import React, { Component } from 'react';
 import { Button, message } from 'antd';
+// import 'antd/dist/antd.css';
 import * as XLSX from 'xlsx';
 import styles from './community.less';
 import axios from 'axios'
@@ -11,8 +12,8 @@ class Excel extends Component {
     super(props);
     this.state = {
       comm: [], 
-      isGood: true,
-      good: false
+      isNotGood: true,
+      notGood: false
     };
   }
   onImportExcel = file => {
@@ -52,48 +53,56 @@ class Excel extends Component {
     };
     // 以二进制方式打开文件
     fileReader.readAsBinaryString(files[0]);
+    this.setState({isNotGood: true})
 
 
   }
   onCheck = () =>{
     const that = this
     for (let i=0; i<that.state.comm.length; i++ ) {
-      console.log(that.state.good);
-      // eslint-disable-next-line eqeqeq
-      if (that.state.good){
-        break
-      }
-
-      console.log(that.state.comm[i]);
-      axios({
-        method: 'get',
-        url: 'http://127.0.0.1:8081/api/checkUser',
-        params: {
-          phone: that.state.comm[i].phone,
-          address: that.state.comm[i].address
-        }
-      })
-        .then(function (response) {
-          console.log(response.data.status);
-          // eslint-disable-next-line eqeqeq
-          if (response.data.status !== 0){
-            that.setState({good: true})
-            that.setState({isGood: true})
-            console.log(that.state.comm[i].address + '已加入某社区');
-            console.log(that.state.good);
-            console.log(that.state.isGood);
-          }
-          else {
-            that.setState({good: false})
-            that.setState({isGood: false})
-  
+      if (!that.state.notGood){
+        console.log(that.state.comm[i]);
+        axios({
+          method: 'get',
+          url: 'http://127.0.0.1:8081/api/checkUser',
+          params: {
+            phone: that.state.comm[i].phone,
+            address: that.state.comm[i].address
           }
         })
+          .then(function (response) {
+            console.log(response.data.status);
+            // eslint-disable-next-line eqeqeq
+            if (response.data.status !== 0){
+              that.setState({isNotGood: true})
+              that.setState({notGood: true})
+              console.log(that.state.comm[i].address + '已加入某社区');
+              console.log(that.state.isNotGood);
+            }
+            else {
+              that.setState({isNotGood: false})
+              that.setState({notGood: false})
+              console.log(that.state.isNotGood);
+            }
+          })
+      }
+      else break            
     }
   }
   onSubmit = ()=> {
     this.state.comm.forEach((item)=>{
       console.log(item.address + 'aa');
+      axios({
+        method: 'get',
+        url: 'http://127.0.0.1:8081/api/submitUser',
+        params: {
+          phone: item.phone,
+          address: item.address
+        }
+      })
+        .then( response => {
+          console.log(response)
+        })
     })
   }
 
@@ -111,12 +120,13 @@ class Excel extends Component {
     })
     return (
       <div style={{ marginTop: 100 }}>
+        <h1>Checkout</h1>
         <Button className={styles['upload-wrap']}>
           <input className={styles['file-uploader']} type='file' accept='.xlsx, .xls' onChange={this.onImportExcel} />
           <span className={styles['upload-text']}>上传文件</span>
         </Button>
-        <Button style={{ marginLeft: 30 }} onClick={this.onCheck}>查验</Button>
-        <Button style={{ marginLeft: 30 }} disabled={this.state.isGood} onClick={this.onCheck}>提交</Button>
+        <Button type="primary" style={{ marginLeft: 30 }} onClick={this.onCheck}>查验</Button>
+        <Button type="primary" style={{ marginLeft: 30}} disabled={this.state.isNotGood} onClick={this.onSubmit}>提交</Button>
         <p className={styles['upload-tip']}>支持 .xlsx、.xls 格式的文件</p>
         <div>{elements}</div>
       </div >
