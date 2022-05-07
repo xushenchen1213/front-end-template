@@ -55,12 +55,12 @@ export default function Main(props) {
     
     axios({
       method: 'get',
-      url: 'http://127.0.0.1:8081/api/checkUser',
+      url: 'http://127.0.0.1:8081/api/getAbi',
       params: {
         fileName: abiFile
       }
     })
-      .then(function (response) {
+      .then(response => {
         console.log(response.data.abi);
         const abi = response.data.abi
         const contract = new ContractPromise(api, abi, address);

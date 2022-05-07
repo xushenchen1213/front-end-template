@@ -5,7 +5,7 @@ import { Button, message } from 'antd';
 import * as XLSX from 'xlsx';
 import styles from './community.less';
 import axios from 'axios'
-
+import Submit from './Submit'
 
 class Excel extends Component {
   constructor(props) {
@@ -13,7 +13,8 @@ class Excel extends Component {
     this.state = {
       comm: [], 
       isNotGood: true,
-      notGood: false
+      notGood: false,
+      volunList: []
     };
   }
   onImportExcel = file => {
@@ -42,7 +43,6 @@ class Excel extends Component {
         // 最终获取到并且格式化后的 json 数据
         message.success('上传成功！')
 
-        console.log(that);
         this.setState({comm: that})
         console.log(this.state.comm);
 
@@ -59,7 +59,29 @@ class Excel extends Component {
   }
   onCheck = () =>{
     const that = this
+    var phone = [];
+    var address = [];
+    var repeat = false;
+    for(var i=0;i<that.state.comm.length;i++){
+        //判断在id这个数组中有没有找到id
+        // eslint-disable-next-line eqeqeq
+        if(phone.indexOf(that.state.comm[i].phone) !== -1 || address.indexOf(that.state.comm[i].address) !== -1){  
+          alert('公钥或手机号重复')
+          repeat = true
+          return
+        }
+        else {
+          phone.push(that.state.comm[i].phone);
+          address.push(that.state.comm[i].address);
+          that.setState({volunList: address})
+          console.log(address);
+        }
+    } 
+
     for (let i=0; i<that.state.comm.length; i++ ) {
+      if (repeat) {
+        return
+      }
       if (!that.state.notGood){
         console.log(that.state.comm[i]);
         axios({
@@ -70,47 +92,32 @@ class Excel extends Component {
             address: that.state.comm[i].address
           }
         })
-          .then(function (response) {
+          .then(response => {
             console.log(response.data.status);
             // eslint-disable-next-line eqeqeq
             if (response.data.status !== 0){
               that.setState({isNotGood: true})
               that.setState({notGood: true})
+              alert('已加入某社区')
               console.log(that.state.comm[i].address + '已加入某社区');
-              console.log(that.state.isNotGood);
             }
             else {
               that.setState({isNotGood: false})
               that.setState({notGood: false})
               console.log(that.state.isNotGood);
+
             }
           })
       }
       else break            
     }
   }
-  onSubmit = ()=> {
-    this.state.comm.forEach((item)=>{
-      console.log(item.address + 'aa');
-      axios({
-        method: 'get',
-        url: 'http://127.0.0.1:8081/api/submitUser',
-        params: {
-          phone: item.phone,
-          address: item.address
-        }
-      })
-        .then( response => {
-          console.log(response)
-        })
-    })
-  }
 
   render() {
     const elements = []
     this.state.comm.forEach((item)=>{
       elements.push(
-        <div>
+        <div key={item.id}>
           {item.name}&nbsp;
           {item.phone}&nbsp;
           {item.address}&nbsp;
@@ -126,8 +133,8 @@ class Excel extends Component {
           <span className={styles['upload-text']}>上传文件</span>
         </Button>
         <Button type="primary" style={{ marginLeft: 30 }} onClick={this.onCheck}>查验</Button>
-        <Button type="primary" style={{ marginLeft: 30}} disabled={this.state.isNotGood} onClick={this.onSubmit}>提交</Button>
         <p className={styles['upload-tip']}>支持 .xlsx、.xls 格式的文件</p>
+        <Submit isNG={this.state.isNotGood} comm={this.state.comm} volunList={this.state.volunList} />
         <div>{elements}</div>
       </div >
 

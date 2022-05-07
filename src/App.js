@@ -22,12 +22,14 @@ import Events from './Events'
 // import Interactor from './Interactor'
 import Metadata from './Metadata'
 import NodeInfo from './NodeInfo'
-import TemplateModule from './TemplateModule'
+import TransferCommunityCoin from './TransferCommunityCoin'
 import Transfer from './Transfer'
-// import Authorization from './Authorization'
+import Confirm from './Confirm'
 // import Upgrade from './Upgrade'
 import Community from './Community'
-import Contract from './Contract'
+import ApplyForCreatCoin from './ApplyForCreatCoin'
+
+
 
 
 function Main() {
@@ -80,24 +82,26 @@ function Main() {
             <BlockNumber />
             <BlockNumber finalized />
           </Grid.Row>
-          <Grid.Row stretched>
-            <Balances />
-          </Grid.Row>
           <Grid.Row>
             <Transfer />
-            {/* <Authorization /> */}
             {/* <Upgrade /> */}
             <Community />
           </Grid.Row>
           <Grid.Row>
+            <ApplyForCreatCoin />
+          </Grid.Row>                  
+          <Grid.Row>
+            <Confirm style={{ marginLeft: 30 }}/>
+          </Grid.Row>                  
+          <Grid.Row stretched>
+            <Balances />
+          </Grid.Row>          
+          <Grid.Row>
             {/* <Interactor /> */}
             <Events />
-          </Grid.Row>
+          </Grid.Row>          
           <Grid.Row>
-            <Contract />
-          </Grid.Row>
-          <Grid.Row>
-            <TemplateModule />
+            <TransferCommunityCoin />
           </Grid.Row>
         </Grid>
       </Container>
