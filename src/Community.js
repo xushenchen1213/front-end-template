@@ -1,7 +1,7 @@
 
 import React, { Component } from 'react';
 import { Button, message } from 'antd';
-// import 'antd/dist/antd.css';
+
 import * as XLSX from 'xlsx';
 import styles from './community.less';
 import axios from 'axios'
