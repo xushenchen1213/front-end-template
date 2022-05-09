@@ -24,7 +24,7 @@ import Metadata from './Metadata'
 import NodeInfo from './NodeInfo'
 import TransferCommunityCoin from './TransferCommunityCoin'
 import Transfer from './Transfer'
-import Confirm from './Confirm'
+import Confirm from './components/Confirm/Confirm'
 // import Upgrade from './Upgrade'
 import Community from './Community'
 import ApplyForCreatCoin from './ApplyForCreatCoin'
@@ -82,30 +82,31 @@ function Main() {
             <BlockNumber />
             <BlockNumber finalized />
           </Grid.Row>
-          <Grid.Row>
-            <Transfer />
-            {/* <Upgrade /> */}
-            <Community />
-          </Grid.Row>
-          <Grid.Row>
-            <ApplyForCreatCoin />
-          </Grid.Row>                  
-          <Grid.Row>
-            <Confirm style={{ marginLeft: 30 }}/>
-          </Grid.Row>                  
           <Grid.Row stretched>
             <Balances />
-          </Grid.Row>          
+          </Grid.Row>
           <Grid.Row>
-            {/* <Interactor /> */}
-            <Events />
-          </Grid.Row>          
+            <Grid.Column>
+              <ApplyForCreatCoin />
+            </Grid.Column>
+            <Grid.Column>
+              <Events />
+            </Grid.Column>
+          </Grid.Row> 
+          <Grid.Row stretched>
+            <Community />
+          </Grid.Row>            
           <Grid.Row>
+            <Transfer />
             <TransferCommunityCoin />
           </Grid.Row>
+          <Grid.Row>
+            <Confirm style={{ marginLeft: 30 }}/>
+          </Grid.Row>             
+                                 
         </Grid>
       </Container>
-      <DeveloperConsole />
+      <DeveloperConsole /> 
     </div>
   )
 }

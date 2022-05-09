@@ -1,9 +1,9 @@
 import React, {useState} from 'react'
 
-import { Input, Button } from 'antd';
+import { Button } from 'antd';
 import axios from 'axios'
-import { metadata } from './ReadMetadate';
-import { useSubstrateState } from './substrate-lib'
+import { metadata } from '../../ReadMetadate';
+import { useSubstrateState } from '../../substrate-lib'
 import { web3FromSource } from '@polkadot/extension-dapp'
 import {  ContractPromise } from '@polkadot/api-contract'
 
@@ -28,13 +28,13 @@ export default function Accept(props) {
   const acc = async()=> {
     const abi = JSON.parse(metadata)
     const fromAcct = await getFromAcct()
-    const address = '5CWpSBs9fKHUAVsVkgg71VxWTjjpXdwiq5GQ8oG5UhCxFzxH';
+    const address = '5FXJVbBX5QtRcjBsjn3i8QcPp5cGsNDJLCfcuMVBWKoFnAEC';
     const value = 0;
     const gasLimit = 30000n * 1000000n;
     const contract = new ContractPromise(api, abi, address);
-    const eventId = props.data[0].id.toString()
-    const accountId = props.data[0].publicKey
-    const volunTime = props.data[0].hours * 1000
+    const eventId = props.record.id.toString()
+    const accountId = props.record.publicKey
+    const volunTime = props.record.hours * 1000
     await contract.tx
     .doVerification({ value, gasLimit },eventId, accountId, volunTime)
     .signAndSend(...fromAcct, (result) => {
@@ -42,15 +42,16 @@ export default function Accept(props) {
       if(!result.dispatchError) {
         axios({
           method: 'get',
-          url: 'http://127.0.0.1:8081/api/accept',
+          url: 'http://175.178.170.3:5051/api/accept',
           params:{
-            id: props.data[0].id
+            id: props.record.id
           }
         })
         .then( response => {
-          console.log(props.data[0].id);
+          console.log(props.record.id);
           console.log(response)
           setIsOn({isOn: true})
+
     
         }) 
       }     
@@ -60,7 +61,6 @@ export default function Accept(props) {
   }
   return (
     <div>
-      <Input />
       <Button onClick={acc} disabled={isOn}>通过申请</Button>
     </div>
 

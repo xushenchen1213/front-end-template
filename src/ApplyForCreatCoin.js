@@ -1,7 +1,5 @@
 import React from 'react'
 import { Form, Input, Button, InputNumber, DatePicker } from 'antd';
-import { web3FromSource } from '@polkadot/extension-dapp'
-import { useSubstrateState } from './substrate-lib'
 import axios from 'axios'
 
 export default function ApplyForCreatCoin() {
@@ -21,34 +19,13 @@ export default function ApplyForCreatCoin() {
       },
     };
 
-
   const [form] = Form.useForm();
-  const { currentAccount } = useSubstrateState()
-  const getFromAcct = async () => {
-    const {
-      address,
-      meta: { source, isInjected },
-    } = currentAccount
-
-    if (!isInjected) {
-      return [currentAccount]
-    }
-
-    // currentAccount is injected from polkadot-JS extension, need to return the addr and signer object.
-    // ref: https://polkadot.js.org/docs/extension/cookbook#sign-and-send-a-transaction
-    const injector = await web3FromSource(source)
-    return [address, { signer: injector.signer }]
-  }
 
   const onFinish = async(values) => {
-    const fromAcct = await getFromAcct()
-    const account_now = fromAcct[0].address
-    console.log(account_now);    
     console.log(values);
-    console.log(values.date._d);
     axios({
       method: 'get',
-      url: 'http://127.0.0.1:8081/api/creatCoins',
+      url: 'http://175.178.170.3:5051/api/creatCoins',
       params: {
         publicKey: values.publicKey,
         name: values.urName,
@@ -75,10 +52,12 @@ export default function ApplyForCreatCoin() {
 
   return (
     <div>
-      <Form {...layout} form={form} name="control-hooks" onFinish={onFinish}>
+      <h1>志愿服务记录提交</h1>
+      <Form style={{marginLeft: 0, padding: 0}} {...layout} form={form} name="control-hooks" onFinish={onFinish}>
       <Form.Item
         name="urName"
         label="姓名"
+        labelCol={{ span: 4 }}
         rules={[
           {
             required: true,
@@ -86,12 +65,13 @@ export default function ApplyForCreatCoin() {
         ]}
       >
         <Input style={{
-            width: 200,
+            width: 400,
           }}/>
       </Form.Item>
       <Form.Item
         name="publicKey"
         label="公钥"
+        labelCol={{ span: 4 }}
         rules={[
           {
             required: true,
@@ -100,12 +80,13 @@ export default function ApplyForCreatCoin() {
       >
         <Input 
         style={{
-            width: 200,
+            width: 400,
           }}/>
       </Form.Item>
       <Form.Item
         name="hours"
         label="志愿时长"
+        labelCol={{ span: 4 }}
         rules={[
           {
             required: true,
@@ -114,9 +95,8 @@ export default function ApplyForCreatCoin() {
       >
         <InputNumber
           style={{
-            width: 200,
+            width: 400,
           }}
-          defaultValue=""
           addonAfter="小时"
           min="0"
           max="24"
@@ -128,6 +108,7 @@ export default function ApplyForCreatCoin() {
       <Form.Item
         name="serviceContent"
         label="服务内容"
+        labelCol={{ span: 4 }}
         rules={[
           {
             required: true,
@@ -136,22 +117,23 @@ export default function ApplyForCreatCoin() {
       >
         <Input 
         style={{
-            width: 200,
+            width: 400,
           }}/>
       </Form.Item>      
       <Form.Item
         name="date"
         label="日期"
+        labelCol={{ span: 4 }}
         rules={[
           {
             required: true,
           },
         ]}
       >
-        <DatePicker onChange={onChange} style={{width: 200}}/>
+        <DatePicker onChange={onChange} style={{width: 400}}/>
 
       </Form.Item>
-      <Form.Item {...tailLayout}>
+      <Form.Item style={{align: 'center'}} {...tailLayout}>
         <Button type="primary" htmlType="submit">
           Submit
         </Button>

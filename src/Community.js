@@ -37,7 +37,7 @@ class Excel extends Component {
           if (workbook.Sheets.hasOwnProperty(sheet)) {
             // 利用 sheet_to_json 方法将 excel 转成 json 数据
             that = data.concat(XLSX.utils.sheet_to_json(workbook.Sheets[sheet]))
-            // break; // 如果只取第一张表，就取消注释这行
+            break; // 如果只取第一张表，就取消注释这行
           }
         }
         // 最终获取到并且格式化后的 json 数据
@@ -57,14 +57,13 @@ class Excel extends Component {
 
 
   }
+
   onCheck = () =>{
     const that = this
     var phone = [];
     var address = [];
     var repeat = false;
     for(var i=0;i<that.state.comm.length;i++){
-        //判断在id这个数组中有没有找到id
-        // eslint-disable-next-line eqeqeq
         if(phone.indexOf(that.state.comm[i].phone) !== -1 || address.indexOf(that.state.comm[i].address) !== -1){  
           alert('公钥或手机号重复')
           repeat = true
@@ -86,7 +85,7 @@ class Excel extends Component {
         console.log(that.state.comm[i]);
         axios({
           method: 'get',
-          url: 'http://127.0.0.1:8081/api/checkUser',
+          url: 'http://175.178.170.3:5051/api/checkUser',
           params: {
             phone: that.state.comm[i].phone,
             address: that.state.comm[i].address
@@ -114,28 +113,28 @@ class Excel extends Component {
   }
 
   render() {
-    const elements = []
-    this.state.comm.forEach((item)=>{
-      elements.push(
-        <div key={item.id}>
-          {item.name}&nbsp;
-          {item.phone}&nbsp;
-          {item.address}&nbsp;
-          <hr/>
-        </div>
-      )
-    })
+    // const elements = []
+    // this.state.comm.forEach((item)=>{
+    //   elements.push(
+    //     <div key={item.id}>
+    //       {item.id}&nbsp;
+    //       {item.name}&nbsp;
+    //       {item.phone}&nbsp;
+    //       {item.address}&nbsp;
+    //       <hr/>
+    //     </div>
+    //   )
+    // })
     return (
-      <div style={{ marginTop: 100 }}>
-        <h1>Checkout</h1>
-        <Button className={styles['upload-wrap']}>
-          <input className={styles['file-uploader']} type='file' accept='.xlsx, .xls' onChange={this.onImportExcel} />
-          <span className={styles['upload-text']}>上传文件</span>
+      <div style={{marginLeft: 13}}>
+        <h1>社区注册</h1>
+        <Button style={{width: 360, height:32, backgroundColor: 'white', border:'1'}}>
+          <input style={{width: 360}} type='file' accept='.xlsm' onChange={this.onImportExcel} />
         </Button>
         <Button type="primary" style={{ marginLeft: 30 }} onClick={this.onCheck}>查验</Button>
         <p className={styles['upload-tip']}>支持 .xlsx、.xls 格式的文件</p>
         <Submit isNG={this.state.isNotGood} comm={this.state.comm} volunList={this.state.volunList} />
-        <div>{elements}</div>
+        {/* <div>{elements}</div> */}
       </div >
 
     );
