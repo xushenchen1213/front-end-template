@@ -1,11 +1,10 @@
-
 import React, { Component } from 'react';
 import { Button, message } from 'antd';
-// import 'antd/dist/antd.css';
 import * as XLSX from 'xlsx';
 import styles from './community.less';
 import axios from 'axios'
 import Submit from './Submit'
+import {CommentOutlined} from '@ant-design/icons'
 
 class Excel extends Component {
   constructor(props) {
@@ -14,10 +13,14 @@ class Excel extends Component {
       comm: [], 
       isNotGood: true,
       notGood: false,
-      volunList: []
+      volunList: [],
+      checkStatus: '',
+      newRegisterStatus: ''
     };
   }
+
   onImportExcel = file => {
+    this.setState({notGood: false})
     // 获取上传的文件对象
     const { files } = file.target;
     // 通过FileReader对象读取文件
@@ -32,7 +35,6 @@ class Excel extends Component {
         let data = [];
         // 遍历每张工作表进行读取（这里默认只读取第一张表）
         for (const sheet in workbook.Sheets) {
-          // esline-disable-next-line
           // eslint-disable-next-line no-prototype-builtins
           if (workbook.Sheets.hasOwnProperty(sheet)) {
             // 利用 sheet_to_json 方法将 excel 转成 json 数据
@@ -57,26 +59,22 @@ class Excel extends Component {
 
 
   }
-
   onCheck = () =>{
     const that = this
-    var phone = [];
     var address = [];
     var repeat = false;
     for(var i=0;i<that.state.comm.length;i++){
-        if(phone.indexOf(that.state.comm[i].phone) !== -1 || address.indexOf(that.state.comm[i].address) !== -1){  
-          alert('公钥或手机号重复')
+        if(address.indexOf(that.state.comm[i].address) !== -1){  
+          alert('公钥重复')
           repeat = true
           return
         }
         else {
-          phone.push(that.state.comm[i].phone);
           address.push(that.state.comm[i].address);
           that.setState({volunList: address})
           console.log(address);
         }
     } 
-
     for (let i=0; i<that.state.comm.length; i++ ) {
       if (repeat) {
         return
@@ -87,54 +85,46 @@ class Excel extends Component {
           method: 'get',
           url: 'http://175.178.170.3:5051/api/checkUser',
           params: {
-            phone: that.state.comm[i].phone,
-            address: that.state.comm[i].address
+            address: that.state.comm[i].address,
+            userId: that.state.comm[i].userId
           }
         })
           .then(response => {
-            console.log(response.data.status);
-            // eslint-disable-next-line eqeqeq
+            console.log(response.data.msg);
             if (response.data.status !== 0){
               that.setState({isNotGood: true})
               that.setState({notGood: true})
-              alert('已加入某社区')
-              console.log(that.state.comm[i].address + '已加入某社区');
+              that.setState({checkStatus: '😞名单不合格'})
+              alert(that.state.comm[i].address + '已加入某社区')
             }
             else {
               that.setState({isNotGood: false})
               that.setState({notGood: false})
+              that.setState({checkStatus: '😉名单合格'})
               console.log(that.state.isNotGood);
-
             }
           })
       }
       else break            
     }
   }
+  onNewRegister = (msg) =>{
+    // console.log(msg);
+    this.setState({newRegisterStatus: msg})
+  }
 
   render() {
-    // const elements = []
-    // this.state.comm.forEach((item)=>{
-    //   elements.push(
-    //     <div key={item.id}>
-    //       {item.id}&nbsp;
-    //       {item.name}&nbsp;
-    //       {item.phone}&nbsp;
-    //       {item.address}&nbsp;
-    //       <hr/>
-    //     </div>
-    //   )
-    // })
     return (
-      <div style={{marginLeft: 13}}>
-        <h1>社区注册</h1>
-        <Button style={{width: 360, height:32, backgroundColor: 'white', border:'1'}}>
-          <input style={{width: 360}} type='file' accept='.xlsm' onChange={this.onImportExcel} />
+      <div style={{height: 203}}>
+        <h2 style={{color:'#3897e1'}}><CommentOutlined style={{marginRight: 5}}/>社区注册</h2>
+        <Button style={{width: 370, height:32, backgroundColor: 'white', border:'1'}}>
+          <input style={{width: 370}} type='file' accept='.xlsm' onChange={this.onImportExcel} />
         </Button>
-        <Button type="primary" style={{ marginLeft: 30 }} onClick={this.onCheck}>查验</Button>
-        <p className={styles['upload-tip']}>支持 .xlsx、.xls 格式的文件</p>
-        <Submit isNG={this.state.isNotGood} comm={this.state.comm} volunList={this.state.volunList} />
-        {/* <div>{elements}</div> */}
+        <Button type="primary" style={{ marginLeft: 24 }} onClick={this.onCheck}>查验</Button>
+        <Submit isNG={this.state.isNotGood} onNewRegister={this.onNewRegister} comm={this.state.comm} volunList={this.state.volunList} />
+        <p style={{marginTop: 15, fontSize: 14}} className={styles['upload-tip']}>支持 .xlsm 格式的文件</p>
+        <div style={{ marginLeft: 15, marginTop: 10 }}>{this.state.checkStatus}</div>
+        <div style={{ marginLeft: 15, marginTop: 10 }}>{this.state.newRegisterStatus}</div>
       </div >
 
     );

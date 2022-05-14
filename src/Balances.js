@@ -2,47 +2,23 @@ import React, { useEffect, useState } from 'react'
 import { Table, Grid, Button, Label } from 'semantic-ui-react'
 import { CopyToClipboard } from 'react-copy-to-clipboard'
 import { useSubstrateState } from './substrate-lib'
-import {  ContractPromise } from '@polkadot/api-contract'
-import { web3FromSource } from '@polkadot/extension-dapp'
-import { metadata } from './ReadMetadate';
-import { contractAddress } from './ReadAddress';
+import { ContractPromise } from '@polkadot/api-contract'
+import axios from 'axios'
+import { BankOutlined } from '@ant-design/icons'
+// eslint-disable-next-line no-unused-vars
+import { contracts } from '@polkadot/types/interfaces/definitions'
+// import BalanceSecond from './BalanceSecond'
 
 export default function Main(props) {
-  const { api, keyring, currentAccount } = useSubstrateState()
+  const { api, keyring } = useSubstrateState()
   const accounts = keyring.getPairs()
   const [balances, setBalances] = useState({})
-  // const [commBalances, setCommBalances] = useState({})
-      
+  const [commBalances, setCommBalances] = useState({})
+  const [commNames, setCommNames] = useState({})
 
   useEffect(() => {
     const addresses = keyring.getPairs().map(account => account.address)
     let unsubscribeAll = null
-    addresses.forEach(element => {
-      console.log(element);
-    });
-    async function commBalance() {
-      const fromAcct = await getFromAcct()      
-      const abi = JSON.parse(metadata)
-      const value = 0; 
-      const gasLimit = 30000n * 1000000n;
-      const contract = new ContractPromise(api, abi, contractAddress);    
-      const balanceOf = await contract.query
-      .balanceOf(fromAcct[0], { value, gasLimit })
-      console.log(balanceOf);
-    }
-    const getFromAcct = async () => {
-      const {
-        address,
-        meta: { source, isInjected },
-      } = currentAccount
-  
-      if (!isInjected) {
-        return [currentAccount]
-      }    
-      const injector = await web3FromSource(source)
-      return [address, { signer: injector.signer }]
-    }    
-    commBalance()
 
     api.query.system.account
       .multi(addresses, balances => {
@@ -60,12 +36,51 @@ export default function Main(props) {
       })
       .catch(console.error)
 
-    return () => unsubscribeAll && unsubscribeAll()
-  }, [api, keyring, setBalances, currentAccount])
+    return () => {
+      unsubscribeAll && unsubscribeAll();
+    }
+  }, [api, keyring, setBalances, setCommBalances, setCommNames])
+
+  useEffect(() => {
+    queryCommData()
+  }, [api, keyring])
+  
+  const queryCommData = () => {
+    let commBalan = {}
+    let commName = {}
+    new Promise((resolve) => {
+      const addresses = keyring.getPairs().map(account => account.address)
+      addresses.map(async (address, index) => {
+        const { data } = await axios({
+          method: 'get',
+          url: 'http://175.178.170.3:5051/api/getCommunity',
+          params: {
+            address: address
+          }
+        });
+
+        if (data.status === 0) {
+          const value = 0;
+          const gasLimit = 30000n * 1000000n;
+          const contract = new ContractPromise(api, data.abi, data.commAddress);
+          const { output } = await contract.query
+            .balanceOf(address, { value, gasLimit }, address)
+          commName[address] = data.commName;
+          commBalan[address] = output.toHuman();
+        }
+        if (addresses.length - 1 === index) {
+          resolve()
+        }
+      })
+    }).then(() => {
+      setCommBalances(commBalan);
+      setCommNames(commName);
+    })
+  }
 
   return (
     <Grid.Column>
-      <h1>Balances</h1>
+      <h2 style={{ color: '#3897e1' }}><BankOutlined style={{ marginRight: 5 }} />用户信息</h2>
       {accounts.length === 0 ? (
         <Label basic color="yellow">
           No accounts to be shown
@@ -75,19 +90,19 @@ export default function Main(props) {
           <Table.Body>
             <Table.Row>
               <Table.Cell width={3} textAlign="right">
-                <strong>Name</strong>
+                <strong>账号名称</strong>
               </Table.Cell>
-              <Table.Cell width={7}>
-                <strong>Address</strong>
+              <Table.Cell width={10}>
+                <strong>公钥地址</strong>
               </Table.Cell>
-              <Table.Cell width={3}>
-                <strong>Balance/Time Coin</strong>
+              <Table.Cell width={6}>
+                <strong>流通币余额</strong>
               </Table.Cell>
-              <Table.Cell width={3}>
-                <strong>Community</strong>
+              <Table.Cell width={6}>
+                <strong>所在社区</strong>
               </Table.Cell>
-              <Table.Cell width={3}>
-                <strong>Balance/Community Coin</strong>
+              <Table.Cell width={6}>
+                <strong>社区币余额</strong>
               </Table.Cell>
             </Table.Row>
             {accounts.map(account => (
@@ -110,13 +125,16 @@ export default function Main(props) {
                     />
                   </CopyToClipboard>
                 </Table.Cell>
-                {/* <Table.Cell width={3}>
-                  {balances &&
-                    balances[account.address] &&
-                    balances[account.address]}
-                </Table.Cell> */}
-                <Table.Cell width={3}>
-                  {(parseFloat(String(balances[account.address]).replace(/,/g,''))/1000000000000).toFixed(2)}
+                <Table.Cell width={6} style={{ minWidth: '9em' }}>
+                  {(parseFloat(String(balances[account.address]).replace(/,/g, '')) / 1000000000000).toFixed(2)}
+                </Table.Cell>
+                <Table.Cell width={6} style={{ minWidth: '9em' }}>
+                  {commNames[account.address] ? commNames[account.address] : '/'}
+                </Table.Cell>
+                <Table.Cell width={6} style={{ minWidth: '9em' }}>
+                  {commBalances[account.address]
+                    ? (parseFloat(String(commBalances[account.address]).replace(/,/g, '')) / 1000000000000).toFixed(2)
+                    : '/'}
                 </Table.Cell>
               </Table.Row>
             ))}

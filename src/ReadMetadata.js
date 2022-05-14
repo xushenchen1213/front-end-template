@@ -1,4 +1,4 @@
-const metadata = JSON.stringify({
+const metadataKaifeng = JSON.stringify({
   "source": {
     "hash": "0xfea2b58194ad560a2c6f69c44d9a1bb206a6814b3c083fa5de05300cd4cf5f49",
     "language": "ink! 3.0.1",
@@ -1358,5 +1358,5 @@ const metadata = JSON.stringify({
 })
 
 export {
-  metadata
+  metadataKaifeng
 }

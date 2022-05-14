@@ -12,7 +12,8 @@ function TxButton({
   disabled = false,
   label,
   setStatus,
-  style = null,
+  style = {paddingLeft: 18, paddingRight: 18, paddingTop: 9, 
+    paddingBottom: 9, margin: 1, borderRadius: 2, background: '#f5f5f5', borderColor: '#d9d9d9'},
   type = 'QUERY',
   txOnClickHandler = null,
 }) {
@@ -61,11 +62,14 @@ function TxButton({
 
   const txResHandler = ({ status }) =>
     status.isFinalized
-      ? setStatus(`😉 Finalized. Block hash: ${status.asFinalized.toString()}`)
-      : setStatus(`Current transaction status: ${status.type}`)
+      // ? setStatus(`😉 Finalized. Block hash: ${status.asFinalized.toString()}`)
+      ? setStatus(`😉 转账成功！`)
+      // : setStatus(`Current transaction status: ${status.type}`)
+      : setStatus(`正在努力转账中`)
 
   const txErrHandler = err =>
-    setStatus(`😞 Transaction Failed: ${err.toString()}`)
+    // setStatus(`😞 Transaction Failed: ${err.toString()}`)
+    setStatus(`😞 转账失败`)
 
   const sudoTx = async () => {
     const fromAcct = await getFromAcct()
@@ -85,6 +89,7 @@ function TxButton({
 
   const uncheckedSudoTx = async () => {
     const fromAcct = await getFromAcct()
+    console.log(fromAcct);
     const txExecute = api.tx.sudo.sudoUncheckedWeight(
       api.tx[palletRpc][callable](...inputParams),
       0

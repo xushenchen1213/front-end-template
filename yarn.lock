@@ -11923,7 +11923,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"prop-types@npm:^15.5.8, prop-types@npm:^15.6.2, prop-types@npm:^15.7.2, prop-types@npm:^15.8.1":
+"prop-types@npm:^15.5.0, prop-types@npm:^15.5.8, prop-types@npm:^15.6.2, prop-types@npm:^15.7.2, prop-types@npm:^15.8.1":
   version: 15.8.1
   resolution: "prop-types@npm:15.8.1"
   dependencies:
@@ -12731,6 +12731,17 @@ __metadata:
   version: 17.0.2
   resolution: "react-is@npm:17.0.2"
   checksum: 9d6d111d8990dc98bc5402c1266a808b0459b5d54830bbea24c12d908b536df7883f268a7868cfaedde3dd9d4e0d574db456f84d2e6df9c4526f99bb4b5344d8
+  languageName: node
+  linkType: hard
+
+"react-loadable@npm:^5.5.0":
+  version: 5.5.0
+  resolution: "react-loadable@npm:5.5.0"
+  dependencies:
+    prop-types: ^15.5.0
+  peerDependencies:
+    react: "*"
+  checksum: 72329cfd2f2c8b3d4666acf97c36e9d653a3620970d2702d22282b1eb4bcb3c709695d06489f2844da2d541e42e45bcf43fe89eeedb508680f071984cee0eddd
   languageName: node
   linkType: hard
 
@@ -14106,6 +14117,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "substrate-front-end-template@workspace:."
   dependencies:
+    "@ant-design/icons": ^4.7.0
     "@polkadot/api": ^7.10.1
     "@polkadot/api-contract": ^8.2.1
     "@polkadot/extension-dapp": ^0.42.7
@@ -14132,6 +14144,7 @@ __metadata:
     react-app-rewired: ^2.2.1
     react-copy-to-clipboard: ^5.0.4
     react-dom: ^17.0.2
+    react-loadable: ^5.5.0
     react-router-config: ^5.1.1
     react-router-dom: ^6.3.0
     react-scripts: ^5.0.0

@@ -26,7 +26,7 @@ export default class Confirm extends Component {
         }
       ],
       isOn: false,
-      data: [{id: 0, eventId: '0',  name: '张三', publicKey: '5xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxrxxxx', 
+      data: [{id: 0, name: '张三', publicKey: '5xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxrxxxx', 
       hours: 'x', serviceContent: '志愿服务', date: '20xx-xx-xx'}],
 
 
@@ -51,6 +51,7 @@ export default class Confirm extends Component {
     console.log(this.state.isOn);
   }
 
+
   query = ()=> {
     const that = this
     axios({
@@ -65,10 +66,10 @@ export default class Confirm extends Component {
   render() {
     return (
       <div style={{marginLeft: 13}}>
-        <h2 style={{color:'#3897e1'}}><FileDoneOutlined style={{marginRight: 5}}/>志愿记录认证<Button style={{marginLeft: 20, color: '#3897e1', borderColor:'#3897e1'}} onClick={this.query}>查询待确认申请</Button></h2>
+        <h2 style={{color:'#3897e1'}}><FileDoneOutlined style={{marginRight: 5}}/>志愿记录申请<Button style={{marginLeft: 20, color: '#3897e1', borderColor:'#3897e1'}} onClick={this.query}>查询待确认申请</Button></h2>
         
       <Table
-      rowKey="eventId"
+      rowKey="id"
       style={{width: 1140}}
       columns={this.state.columns}
       dataSource={this.state.data}

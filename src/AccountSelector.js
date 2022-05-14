@@ -1,13 +1,15 @@
 import React, { useState, useEffect } from 'react'
 import { CopyToClipboard } from 'react-copy-to-clipboard'
+import { Avatar } from 'antd';
+import { UserOutlined } from '@ant-design/icons';
 
 import {
   Menu,
   Button,
   Dropdown,
+  Image,
   Container,
   Icon,
-  Image,
   Label,
 } from 'semantic-ui-react'
 
@@ -65,7 +67,7 @@ function Main(props) {
           <Image
             src={`${process.env.PUBLIC_URL}/assets/time_logo.png`}
             size="small"
-            style={{marginTop:10}} 
+            style={{marginTop:10, color:'#3897e1'}} 
           />
         </Menu.Menu>
         <Menu.Menu position="right" style={{ alignItems: 'center' }}>
@@ -86,10 +88,10 @@ function Main(props) {
             <Button
               basic
               circular
-              size="large"
-              icon="user"
-              color={currentAccount ? 'green' : 'red'}
-            />
+              size='medium'
+              style={{padding: 2}}
+              color={currentAccount ? 'blue' : 'red'}
+            ><Avatar style={{ backgroundColor: '#3897e1' }} icon={<UserOutlined />} /></Button>
           </CopyToClipboard>
           <Dropdown
             search
@@ -130,13 +132,14 @@ function BalanceAnnotation(props) {
   }, [api, currentAccount])
 
   return currentAccount ? (
-    <Label pointing="left">
-      <Icon name="money" color="green" />
-      {accountBalance}
+    <Label pointing="left" style={{paddingTop: 14, paddingBottom: 14}}>
+      <Icon name="money" color="blue" />
+      {(parseFloat(String(accountBalance).replace(/,/g, '')) / 1000000000000).toFixed(2)}
     </Label>
   ) : null
 }
-
+//      {accountBalance}
+//(parseFloat(String(commBalances[account.address]).replace(/,/g, '')) / 1000000000000).toFixed(2)
 export default function AccountSelector(props) {
   const { api, keyring } = useSubstrateState()
   return keyring.getPairs && api.query ? <Main {...props} /> : null

@@ -1,3 +1,5 @@
+
+
 import React, { createRef } from 'react'
 import {
   Container,
@@ -9,25 +11,21 @@ import {
 } from 'semantic-ui-react'
 import 'semantic-ui-css/semantic.min.css'
 
-import { SubstrateContextProvider, useSubstrateState } from '../substrate-lib'
-import { DeveloperConsole } from '../substrate-lib/components'
+import { SubstrateContextProvider, useSubstrateState } from './substrate-lib'
+import { DeveloperConsole } from './substrate-lib/components'
 
-import AccountSelector from '../AccountSelector'
-import Balances from '../Balances'
-import BlockNumber from '../BlockNumber'
-import Events from '../Events'
-import Interactor from './Interactor'
-import Metadata from '../Metadata'
-import NodeInfo from '../NodeInfo'
-import TemplateModule from '../TemplateModule'
-import Transfer from '../Transfer'
-import Authorization from '../Authorization'
-import Upgrade from './Upgrade'
-import Community from '../Community'
-// import Sider from './Sider'
+// import Router from './Routes/index.js'
+import AccountSelector from './AccountSelector'
+
+import Balances from './Balances'
+import TransferCommunityCoin from './TransferCommunityCoin'
+import Transfer from './Transfer'
+import ConfirmForStudents from './components/ConfirmForStudents/Confirm'
+import ApplyForCreatCoin from './ApplyForCreatCoin'
 
 
 function Main() {
+
   const { apiState, apiError, keyringState } = useSubstrateState()
 
   const loader = text => (
@@ -35,7 +33,6 @@ function Main() {
       <Loader size="small">{text}</Loader>
     </Dimmer>
   )
-
   const message = errObj => (
     <Grid centered columns={2} padded>
       <Grid.Column>
@@ -58,43 +55,33 @@ function Main() {
       "Loading accounts (please review any extension's authorization)"
     )
   }
-
   const contextRef = createRef()
 
   return (
     <div ref={contextRef}>
-      {/* <Sider/> */}
       <Sticky context={contextRef}>
         <AccountSelector />
       </Sticky>
       <Container>
         <Grid stackable columns="equal">
           <Grid.Row stretched>
-            <NodeInfo />
-            <Metadata />
-            <BlockNumber />
-            <BlockNumber finalized />
-          </Grid.Row>
-          <Grid.Row stretched>
             <Balances />
           </Grid.Row>
           <Grid.Row>
-            <Transfer />
-            <Authorization />
-            <Upgrade />
-            <Community />
-          </Grid.Row>
+            <ConfirmForStudents style={{ marginLeft: 30 }}/>
+          </Grid.Row> 
           <Grid.Row>
-            <Interactor />
-            <Events />
-          </Grid.Row>
-          <Grid.Row>
-            <TemplateModule />
+            <Grid.Column>
+              <ApplyForCreatCoin />
+            </Grid.Column>
+            <Grid.Column stretched>
+              <Transfer />
+              <TransferCommunityCoin />
+            </Grid.Column>
           </Grid.Row>
         </Grid>
       </Container>
-      <DeveloperConsole />
-
+      <DeveloperConsole /> 
     </div>
   )
 }
@@ -102,6 +89,7 @@ function Main() {
 export default function App() {
   return (
     <SubstrateContextProvider>
+      {/* <Router/> */}
       <Main />
     </SubstrateContextProvider>
 
