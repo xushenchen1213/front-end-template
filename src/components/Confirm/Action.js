@@ -36,56 +36,58 @@ export default function Action(props) {
     // get community messages
     axios({
       method: 'get',
-      url: 'http://175.178.170.3:5051/api/getCommunity',
+      url: 'https://timecoin.tech:8082/api/getCommunity',
       params: {
         address: fromAcct[0]
       }
     })
       .then(response => {
-        // setCommAddress(response.data.commAddress)
-        // setAbi(response.data.abi)
-        // const address = '5FXJVbBX5QtRcjBsjn3i8QcPp5cGsNDJLCfcuMVBWKoFnAEC';
-        const value = 0;
-        const gasLimit = 30000n * 1000000n;
-        const contract = new ContractPromise(api, response.data.abi, response.data.commAddress);
-        const eventId = props.record.eventId.toString()
-        const accountId = props.record.publicKey
-        const volunTime = props.record.hours * 1000
-        contract.tx
-        .doVerification({ value, gasLimit },eventId, accountId, volunTime)
-        .signAndSend(...fromAcct, (result) => {
-          console.log(result);
-          console.log(result.dispatchError);
-          if(result.contractEvents) {
-            axios({
-              method: 'get',
-              url: 'http://175.178.170.3:5051/api/accept',
-              params:{
-                eventId: props.record.eventId
-              }
-            })
-            .then( response => {
-              console.log(props.record.eventId);
-              console.log(response)
-              setIsOn({isOn: true})
-              setStatus('😉 已铸币')
-            }) 
-          }   
-          if (result.dispatchError)  {
-            setStatus('😞 失败了')            
-          }
-        });      
+        if (response.data.status===0) {
+          // setCommAddress(response.data.commAddress)
+          // setAbi(response.data.abi)
+          // const address = '5FXJVbBX5QtRcjBsjn3i8QcPp5cGsNDJLCfcuMVBWKoFnAEC';
+          const value = 0;
+          const gasLimit = 30000n * 1000000n;
+          const contract = new ContractPromise(api, response.data.abi, response.data.commAddress);
+          const eventId = props.record.eventId.toString()
+          const accountId = props.record.publicKey
+          const volunTime = props.record.hours * 1000
+          contract.tx
+          .doVerification({ value, gasLimit },eventId, accountId, volunTime)
+          .signAndSend(...fromAcct, (result) => {
+            console.log(result);
+            console.log(result.dispatchError);
+            if(result.contractEvents) {
+              axios({
+                method: 'get',
+                url: 'https://timecoin.tech:8082/api/accept',
+                params:{
+                  eventId: props.record.eventId
+                }
+              })
+              .then( response => {
+                console.log(props.record.eventId);
+                console.log(response)
+                setIsOn({isOn: true})
+                setStatus('😉 已铸币')
+              }) 
+            }   
+            if (result.dispatchError)  {
+              setStatus('😞 失败了')            
+            }
+          });      
+        }
       })
   }
   const refuse = async()=> {
     const fromAcct = await getFromAcct()
-    if (props.record.eventId==='0') return
+    if (props.record.eventId===0) return
     console.log(fromAcct);
     setIsOn({isOn: true})
     setStatus('😞 已拒绝')
     axios({
       method: 'get',
-      url: 'http://175.178.170.3:5051/api/reject',
+      url: 'https://timecoin.tech:8082/api/reject',
       params:{
         eventId: props.record.eventId
       }
@@ -100,7 +102,7 @@ export default function Action(props) {
   return (
     <div style={{minWidth: '18em' }}>
       <Button onClick={accept} style={{paddingLeft: 4, paddingRight: 4}} disabled={isOn}>通过申请</Button>
-      <Button onClick={refuse} style={{paddingLeft: 4, paddingRight: 4}} disabled={isOn}>拒绝申请</Button>
+      <Button onClick={refuse} style={{marginLeft: 10, paddingLeft: 4, paddingRight: 4}} disabled={isOn}>拒绝申请</Button>
       <span>{status}</span>
     </div>
     

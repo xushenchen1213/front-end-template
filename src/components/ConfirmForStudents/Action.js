@@ -1,4 +1,3 @@
-
 import React, {useState} from 'react'
 import { Button } from 'antd';
 import axios from 'axios'
@@ -8,18 +7,18 @@ export default function Action(props) {
   const [isOn, setIsOn] = useState(false)
   const [status, setStatus] = useState()
   const recall = ()=> {
-    if (props.record.id===0) return
+    if (props.record.eventId===0) return
     console.log(props.record);
     // recall application
     axios({
       method: 'get',
-      url: 'http://175.178.170.3:5051/api/recall',
+      url: 'https://timecoin.tech:8082/api/recall',
       params:{
-        id: props.record.id
+        eventId: props.record.eventId
       }
     })
     .then( response => {
-      console.log(props.record.id);
+      console.log(props.record.eventId);
       console.log(response)
       setIsOn({isOn: true})
       setStatus('😞 已撤回')

@@ -43,6 +43,7 @@ export default function Main(props) {
 
   useEffect(() => {
     queryCommData()
+    // eslint-disable-next-line
   }, [api, keyring])
   
   const queryCommData = () => {
@@ -53,7 +54,7 @@ export default function Main(props) {
       addresses.map(async (address, index) => {
         const { data } = await axios({
           method: 'get',
-          url: 'http://175.178.170.3:5051/api/getCommunity',
+          url: 'https://timecoin.tech:8082/api/getCommunity',
           params: {
             address: address
           }

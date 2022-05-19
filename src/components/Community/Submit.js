@@ -38,7 +38,7 @@ export default function Submit(props) {
     //get commName, commAddress, abi
     axios({
       method: 'get',
-      url: 'http://175.178.170.3:5051/api/getCommunity',
+      url: 'https://timecoin.tech:8082/api/getCommunity',
       params: {
         address: fromAcct[0]
       }
@@ -65,7 +65,7 @@ export default function Submit(props) {
               props.comm.forEach((item) => {
                 axios({
                   method: 'get',
-                  url: 'http://175.178.170.3:5051/api/submitUser',
+                  url: 'https://timecoin.tech:8082/api/submitUser',
                   params: {
                     userId: item.userId,
                     address: item.address,

@@ -5,15 +5,11 @@ import { Button } from 'antd';
 import { useSubstrateState } from './substrate-lib'
 import { web3FromSource } from '@polkadot/extension-dapp'
 import { ContractPromise } from '@polkadot/api-contract'
-// import { metadataKaifeng } from './ReadMetadata';
-// import { contractAddress } from './ReadAddress';
 import { MoneyCollectOutlined } from '@ant-design/icons'
 
 export default function Main(props) {
   const [formState, setFormState] = useState({ addressTo: '', amount: 0 })
   const [status, setStatus] = useState()
-  // const [commAddress, setCommAddress] = useState('')
-  // const [abi, setAbi] = useState()
 
   const onChange = (_, data) =>
     setFormState(prev => ({ ...prev, [data.state]: data.value }))
@@ -48,19 +44,17 @@ export default function Main(props) {
     return [address, { signer: injector.signer }]
   }
 
-  // const abi = JSON.parse(metadataKaifeng)
   const onTransfer = async () => {
     const fromAcct = await getFromAcct()
     axios({
       method: 'get',
-      url: 'http://175.178.170.3:5051/api/getCommunity',
+      url: 'https://timecoin.tech:8082/api/getCommunity',
       params: {
         address: fromAcct[0]
       }
     })
       .then(response => {
         console.log(response);
-        // const address = contractAddress[0].address
         const value = 0;
         const gasLimit = 30000n * 1000000n;
         const contract = new ContractPromise(api, response.data.abi, response.data.commAddress);

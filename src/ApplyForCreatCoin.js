@@ -27,7 +27,7 @@ export default function ApplyForCreatCoin() {
     console.log(values);
     axios({
       method: 'get',
-      url: 'http://175.178.170.3:5051/api/creatCoins',
+      url: 'https://timecoin.tech:8082/api/creatCoins',
       params: {
         name: values.name,
         publicKey: values.publicKey,

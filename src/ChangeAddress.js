@@ -1,10 +1,23 @@
 import React, { useState } from 'react'
 import { Form, Input, Button } from 'antd';
+import { useSubstrateState } from './substrate-lib'
+import { web3FromSource } from '@polkadot/extension-dapp'
 import axios from 'axios'
 import { DeliveredProcedureOutlined } from '@ant-design/icons'
 
 export default function ApplyForCreatCoin() {
-
+  const { currentAccount } = useSubstrateState()
+  const getFromAcct = async () => {
+    const {
+      address,
+      meta: { source, isInjected },
+    } = currentAccount
+    if (!isInjected) {
+      return [currentAccount]
+    }
+    const injector = await web3FromSource(source)
+    return [address, { signer: injector.signer }]
+  }
   const layout = {
     labelCol: {
       span: 8,
@@ -25,10 +38,12 @@ export default function ApplyForCreatCoin() {
 
   const onFinish = async (values) => {
     console.log(values);
+    const fromAcct = await getFromAcct()
     axios({
       method: 'get',
-      url: 'http://175.178.170.3:5051/api/updatePublicKey',
+      url: 'https://timecoin.tech:8082/api/updatePublicKey',
       params: {
+        from_address: fromAcct[0],
         chain_address: values.publicKey,
         publicKeyNew: values.publicKeyNew
       }

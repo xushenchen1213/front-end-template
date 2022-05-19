@@ -83,7 +83,7 @@ class Excel extends Component {
         console.log(that.state.comm[i]);
         axios({
           method: 'get',
-          url: 'http://175.178.170.3:5051/api/checkUser',
+          url: 'https://timecoin.tech:8082/api/checkUser',
           params: {
             address: that.state.comm[i].address,
             userId: that.state.comm[i].userId

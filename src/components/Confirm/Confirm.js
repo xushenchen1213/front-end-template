@@ -1,9 +1,9 @@
 import React, { Component } from 'react'
-import { Table, Button } from 'antd';
-import axios from 'axios'
+import { Table } from 'antd';
 import { useSubstrateState } from '../../substrate-lib'
 import { web3FromSource } from '@polkadot/extension-dapp'
 import Action from './Action'
+import Query from './Query'
 import {FileDoneOutlined} from '@ant-design/icons'
 
 export default class Confirm extends Component {
@@ -26,7 +26,7 @@ export default class Confirm extends Component {
         }
       ],
       isOn: false,
-      data: [{id: 0, eventId: '0',  name: '张三', publicKey: '5xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxrxxxx', 
+      data: [{id: 0, eventId: 0,  name: '张三', publicKey: '5xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxrxxxx', 
       hours: 'x', serviceContent: '志愿服务', date: '20xx-xx-xx'}],
 
 
@@ -47,26 +47,16 @@ export default class Confirm extends Component {
     const injector = await web3FromSource(source)
     return [address, { signer: injector.signer }]
   }
-  te=()=>{
-    console.log(this.state.isOn);
+
+  getData = (tableData) => {
+    this.setState({data: tableData})
   }
 
-  query = ()=> {
-    const that = this
-    axios({
-      method: 'get',
-      url: 'http://175.178.170.3:5051/api/readApply',
-    })
-    .then( response => {
-      that.setState({data: response.data.result})     
-      console.log(response.data.result)
-    })  
-  }
   render() {
     return (
       <div style={{marginLeft: 13}}>
-        <h2 style={{color:'#3897e1'}}><FileDoneOutlined style={{marginRight: 5}}/>志愿记录认证<Button style={{marginLeft: 20, color: '#3897e1', borderColor:'#3897e1'}} onClick={this.query}>查询待确认申请</Button></h2>
-        
+        <h2 style={{color:'#3897e1'}}><FileDoneOutlined style={{marginRight: 5}}/>
+        志愿记录认证<Query getData={this.getData} style={{marginLeft: 20, color: '#3897e1', borderColor:'#3897e1'}} /></h2>
       <Table
       rowKey="eventId"
       style={{width: 1140}}

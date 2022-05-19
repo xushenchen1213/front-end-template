@@ -11,17 +11,17 @@ import {
 } from 'semantic-ui-react'
 import 'semantic-ui-css/semantic.min.css'
 
-import { SubstrateContextProvider, useSubstrateState } from './substrate-lib'
-import { DeveloperConsole } from './substrate-lib/components'
+import { SubstrateContextProvider, useSubstrateState } from '../substrate-lib'
+import { DeveloperConsole } from '../substrate-lib/components'
 
 // import Router from './Routes/index.js'
-import AccountSelector from './AccountSelector'
+import AccountSelector from '../AccountSelector'
 
-import Balances from './Balances'
-import TransferCommunityCoin from './TransferCommunityCoin'
-import Transfer from './Transfer'
-import ConfirmForStudents from './components/ConfirmForStudents/Confirm'
-import ApplyForCreatCoin from './ApplyForCreatCoin'
+import Balances from '../Balances'
+import TransferCommunityCoin from '../TransferCommunityCoin'
+import Transfer from '../Transfer'
+import ConfirmForStudents from '../components/ConfirmForStudents/Confirm'
+import ApplyForCreatCoin from '../ApplyForCreatCoin'
 
 
 function Main() {
