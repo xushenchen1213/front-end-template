@@ -54,12 +54,12 @@ export default class Confirm extends Component {
 
   render() {
     return (
-      <div style={{marginLeft: 13}}>
+      <div style={{padding: 20, borderRadius: 10, border: 1, opacity: 0.9, background: '#fff'}}>
         <h2 style={{color:'#3897e1'}}><FileDoneOutlined style={{marginRight: 5}}/>
         志愿记录认证<Query getData={this.getData} style={{marginLeft: 20, color: '#3897e1', borderColor:'#3897e1'}} /></h2>
       <Table
       rowKey="eventId"
-      style={{width: 1140}}
+      style={{width: 1115}}
       columns={this.state.columns}
       dataSource={this.state.data}
     />

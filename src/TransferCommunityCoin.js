@@ -87,6 +87,7 @@ export default function Main(props) {
             fluid
             label="收款账户"
             type="text"
+            maxLength="48"
             placeholder="address"
             value={addressTo}
             state="addressTo"
@@ -97,8 +98,11 @@ export default function Main(props) {
           <Input
             fluid
             label="转账金额"
-            type="number"
+            type="float"
             state="amount"
+            min="0"
+            maxLength="4"
+            precision="2"
             onChange={onChange}
           />
         </Form.Field>

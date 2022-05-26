@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { Form, Input, Button, InputNumber, DatePicker } from 'antd';
 import axios from 'axios'
+import moment from 'moment'
 import { DeliveredProcedureOutlined } from '@ant-design/icons'
 
 export default function ApplyForCreatCoin() {
@@ -58,13 +59,16 @@ export default function ApplyForCreatCoin() {
   function onChangeNum(value) {
     console.log('changed', value);
   }
+  function onDisabledDate(current){
+    return current && current > moment().endOf("days");//当天之前的不可选，不包括当天
+  }
 
   return (
     <div>
-      <h2 style={{ color: '#3897e1' }}><DeliveredProcedureOutlined style={{ marginRight: 5 }} />志愿服务记录提交</h2>
-      <Form style={{ marginLeft: 0, padding: 0 }} {...layout} form={form} name="control-hooks" onFinish={onFinish}>
+      <h2 style={{ color: '#3897e1' }}><DeliveredProcedureOutlined style={{ marginRight: 5, marginBottom: 10}} />志愿服务记录提交</h2>
+      <Form {...layout} form={form} name="control-hooks" onFinish={onFinish}>
         <Form.Item
-          style={{ height: 50 }}
+          style={{ height: 30 }}
           name="name"
           label="姓名"
           labelCol={{ span: 4 }}
@@ -74,12 +78,11 @@ export default function ApplyForCreatCoin() {
             },
           ]}
         >
-          <Input style={{
-            width: 400,
-          }} />
+          <Input style={{width: 400}} 
+          maxLength={10}/>
         </Form.Item>
         <Form.Item
-          style={{ height: 50 }}
+          style={{ height: 30 }}
           name="publicKey"
           label="公钥"
           labelCol={{ span: 4 }}
@@ -90,12 +93,11 @@ export default function ApplyForCreatCoin() {
           ]}
         >
           <Input
-            style={{
-              width: 400,
-            }} />
+            style={{width: 400}} 
+            maxLength={48} />
         </Form.Item>
         <Form.Item
-          style={{ height: 50 }}
+          style={{ height: 30 }}
           name="hours"
           label="志愿时长"
           labelCol={{ span: 4 }}
@@ -114,11 +116,12 @@ export default function ApplyForCreatCoin() {
             max="24"
             step="1"
             onChange={onChangeNum}
+            precision="1"
             stringMode
           />
         </Form.Item>
         <Form.Item
-          style={{ height: 50 }}
+          style={{ height: 30 }}
           name="serviceContent"
           label="服务内容"
           labelCol={{ span: 4 }}
@@ -129,9 +132,8 @@ export default function ApplyForCreatCoin() {
           ]}
         >
           <Input
-            style={{
-              width: 400,
-            }} />
+            style={{width: 400}} 
+            maxLength={24} />
         </Form.Item>
         <Form.Item
           name="date"
@@ -143,7 +145,7 @@ export default function ApplyForCreatCoin() {
             },
           ]}
         >
-          <DatePicker onChange={onChange} style={{ width: 400 }} />
+          <DatePicker onChange={onChange} disabledDate={onDisabledDate} style={{ width: 400 }} />
 
         </Form.Item>
         <Form.Item style={{ align: 'center' }} {...tailLayout}>

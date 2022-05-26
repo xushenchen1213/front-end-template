@@ -37,6 +37,7 @@ export default function Main(props) {
             type="text"
             placeholder="address"
             value={addressTo}
+            maxLength="48"
             state="addressTo"
             onChange={onChange}
           />
@@ -45,8 +46,11 @@ export default function Main(props) {
           <Input
             fluid
             label="转账金额"
-            type="number"
+            type="float"
             state="amount"
+            min="0"
+            maxLength="4"
+            precision="2"
             onChange={onChange}
           />
         </Form.Field>

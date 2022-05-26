@@ -27,7 +27,7 @@ export default function Action(props) {
   }
 
   return (
-    <div style={{minWidth: '16em' }}>
+    <div style={{minWidth: '15em' }}>
       <Button onClick={recall} disabled={isOn}>撤回申请</Button>
       <span>{status}</span>
     </div>

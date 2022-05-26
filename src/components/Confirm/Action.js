@@ -100,7 +100,7 @@ export default function Action(props) {
   }
 
   return (
-    <div style={{minWidth: '18em' }}>
+    <div style={{minWidth: '15em' }}>
       <Button onClick={accept} style={{paddingLeft: 4, paddingRight: 4}} disabled={isOn}>通过申请</Button>
       <Button onClick={refuse} style={{marginLeft: 10, paddingLeft: 4, paddingRight: 4}} disabled={isOn}>拒绝申请</Button>
       <span>{status}</span>

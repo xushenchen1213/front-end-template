@@ -65,7 +65,7 @@ class Excel extends Component {
     var repeat = false;
     for(var i=0;i<that.state.comm.length;i++){
         if(address.indexOf(that.state.comm[i].address) !== -1){  
-          alert('公钥重复')
+          alert('文件及内容不合规范')
           repeat = true
           return
         }
@@ -100,7 +100,7 @@ class Excel extends Component {
             else {
               that.setState({isNotGood: false})
               that.setState({notGood: false})
-              that.setState({checkStatus: '😉名单合格'})
+              that.setState({checkStatus: '😉名单合格！'})
               console.log(that.state.isNotGood);
             }
           })
@@ -115,16 +115,15 @@ class Excel extends Component {
 
   render() {
     return (
-      <div style={{height: 203}}>
-        <h2 style={{color:'#3897e1'}}><CommentOutlined style={{marginRight: 5}}/>社区注册</h2>
-        <Button style={{width: 370, height:32, backgroundColor: 'white', border:'1'}}>
-          <input style={{width: 370}} type='file' accept='.xlsm' onChange={this.onImportExcel} />
+      <div style={{height: 165}}>
+        <h2 style={{color:'#3897e1'}}><CommentOutlined style={{marginRight: 5, marginBottom: 10}}/>社区注册</h2>
+        <Button style={{width: 340, height:32, backgroundColor: 'white', border:'1'}}>
+          <input style={{width: 340}} type='file' accept='.xlsm' onChange={this.onImportExcel} />
         </Button>
-        <Button type="primary" style={{ marginLeft: 24 }} onClick={this.onCheck}>查验</Button>
+        <Button type="primary" style={{ marginLeft: 22 }} onClick={this.onCheck}>查验</Button>
         <Submit isNG={this.state.isNotGood} onNewRegister={this.onNewRegister} comm={this.state.comm} volunList={this.state.volunList} />
         <p style={{marginTop: 15, fontSize: 14}} className={styles['upload-tip']}>支持 .xlsm 格式的文件</p>
-        <div style={{ marginLeft: 15, marginTop: 10 }}>{this.state.checkStatus}</div>
-        <div style={{ marginLeft: 15, marginTop: 10 }}>{this.state.newRegisterStatus}</div>
+        <span style={{ marginTop: 10 }}>{this.state.checkStatus}{this.state.newRegisterStatus}</span>
       </div >
 
     );

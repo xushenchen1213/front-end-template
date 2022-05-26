@@ -22,14 +22,6 @@ export default function Submit(props) {
     return [address, { signer: injector.signer }]
   }
 
-  // const [commName, setCommName] = useState('')
-  // const [commAddress, setCommAddress] = useState('')
-  // const [metadata, setMetadata] = useState('')
-  // const [abi, setAbi] = useState({})
-  // const [status, setStatus] = useState()
-
-
-
   const onSubmit = async () => {
     // const abi = JSON.parse(metadataKaifeng)
     const fromAcct = await getFromAcct()
@@ -45,10 +37,6 @@ export default function Submit(props) {
     })
       .then(async (response) => {
         console.log(response);
-        // setCommName(response.data.commName)
-        // setCommAddress(response.data.commAddress)
-        // setAbi(response.data.abi)
-        // setMetadata(response.data.metadata)
         // const address = '5FXJVbBX5QtRcjBsjn3i8QcPp5cGsNDJLCfcuMVBWKoFnAEC';
         //register into community
         const value = 0;
@@ -85,6 +73,6 @@ export default function Submit(props) {
   }
 
   return (
-    <Button style={{ marginLeft: 24 }} disabled={props.isNG} onClick={onSubmit}>注册</Button>
+    <Button style={{ marginLeft: 22 }} disabled={props.isNG} onClick={onSubmit}>注册</Button>
   )
 }

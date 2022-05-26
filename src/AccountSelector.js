@@ -59,7 +59,7 @@ function Main(props) {
         backgroundColor: '#fff',
         borderColor: '#fff',
         paddingTop: '1em',
-        paddingBottom: '1em',
+        paddingBottom: '1em'
       }}
     >
       <Container>

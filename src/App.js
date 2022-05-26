@@ -1,3 +1,4 @@
+// import Background from '../public/assets/whiteClockDark.jpg'
 import React, { createRef } from 'react'
 import {
   Container,
@@ -28,6 +29,8 @@ import { Routes, Route, Navigate } from "react-router-dom"
 // import asyncComponents from './AsyncLoading'
 // const User = asyncComponents(() => import('./Auser'))
 // const Admin = asyncComponents(() => import('./Admin'))
+import Appp from './Appp'
+import Apppp from './Apppp'
 
 
 function Main() {
@@ -37,10 +40,21 @@ function Main() {
         <Route path='/' exact element={<User />}></Route>
         <Route path='/user' exact element={<User />}></Route>
         <Route path='/admin' exact element={<Admin />}></Route>
+        <Route path='/index' exact element={<Appp />}></Route>
+        <Route path='/index1' exact element={<Apppp />}></Route>
         <Route path='*' exact element={<Navigate to='/user' />}></Route>
       </Routes>
     </div>
   )
+}
+const sectionStyle = {
+  width: '100%',
+  height: '100%',
+  // background: `url(${Background}) no-repeat center center fixed`,
+  background: `#f5f6fa`,
+  backgroundSize: 'cover',
+  // opacity: 0.9,
+  // filter: 10
 }
 
 function User() {
@@ -77,30 +91,35 @@ function User() {
   const contextRef = createRef()
 
   return (
-    <div ref={contextRef}>
+    <div style={sectionStyle} ref={contextRef}>
       <Sticky context={contextRef}>
         <AccountSelector />
       </Sticky>
-      <Container>
+      <Container style={{ marginTop: 30 }}>
         <Grid stackable columns="equal">
           <Grid.Row stretched>
             <Balances />
           </Grid.Row>
           <Grid.Row>
-            <ConfirmForStudents style={{ marginLeft: 30 }}/>
-          </Grid.Row> 
+            <ConfirmForStudents style={{ border: 1, background: '#fff', paddingTop: 15, paddingBottom: 15 }} />
+          </Grid.Row>
           <Grid.Row>
-            <Grid.Column>
-              <ApplyForCreatCoin />
+            <Grid.Column style={{ paddingLeft: 0, margin: 0 }}>
+              <div style={{ padding: 25, border: 1, borderRadius: 10, background: '#fff', opacity: 0.9 }}>
+                <ApplyForCreatCoin />
+              </div>
             </Grid.Column>
-            <Grid.Column stretched>
-              <Transfer />
-              <TransferCommunityCoin />
+            <Grid.Column stretched style={{ paddingRight: 0, margin: 0 }}>
+              <div style={{ border: 1, borderRadius: 10, padding: 25, opacity: 0.9, background: '#fff' }}>
+                <Transfer />
+                {/* <div style={{ color: '#fff' }}>--------------------------------------------------------------------------------------------------------------</div> */}
+                <TransferCommunityCoin />
+              </div>
             </Grid.Column>
           </Grid.Row>
         </Grid>
       </Container>
-      <DeveloperConsole /> 
+      <DeveloperConsole />
     </div>
   )
 }
@@ -138,13 +157,13 @@ function Admin() {
   const contextRef = createRef()
 
   return (
-    <div ref={contextRef}>
-      <Sticky context={contextRef}>
+    <div style={sectionStyle} ref={contextRef}>
+      <Sticky style={{ background: "#fff" }} context={contextRef}>
         <AccountSelector />
       </Sticky>
-      <Container>
+      <Container style={{ marginTop: 30 }}>
         <Grid stackable columns="equal">
-          <Grid.Row stretched>
+          <Grid.Row style={{ background: "#fff", opacity: 0.9, borderRadius: 10 }} stretched>
             <NodeInfo />
             <Metadata />
             <BlockNumber />
@@ -153,27 +172,33 @@ function Admin() {
           <Grid.Row stretched>
             <Balances />
           </Grid.Row>
-          <Grid.Row>
+          <Grid.Row style={{ padding: 25, border: 1, borderRadius: 10, background: '#fff', opacity: 0.9 }}>
+            {/* <div style={{ padding: 25, border: 1, borderRadius: 10, background: '#fff', opacity: 0.9 }}> */}
             <Transfer />
             <TransferCommunityCoin />
-          </Grid.Row>          
+            {/* </div> */}
+          </Grid.Row>
           <Grid.Row>
-            <Grid.Column>
-              <ApplyForCreatCoin />
+            <Grid.Column style={{paddingLeft: 0}}>
+              <div style={{ padding: 25, border: 1, borderRadius: 10, background: '#fff', opacity: 0.9 }}>
+                <ApplyForCreatCoin />
+              </div>
             </Grid.Column>
-            <Grid.Column stretched>
+            <Grid.Column style={{paddingRight: 0}} stretched>
+            <div style={{ padding: 25, border: 1, borderRadius: 10, background: '#fff', opacity: 0.9 }}>
               <Community />
               <ChangeAddress />
+              </div>
             </Grid.Column>
-          </Grid.Row>  
+          </Grid.Row>
 
           <Grid.Row>
-            <Confirm style={{ marginLeft: 30 }}/>
-          </Grid.Row> 
-                                 
+            <Confirm style={{ marginLeft: 30 }} />
+          </Grid.Row>
+
         </Grid>
       </Container>
-      <DeveloperConsole /> 
+      <DeveloperConsole />
     </div>
   )
 }
@@ -183,6 +208,5 @@ export default function App() {
     <SubstrateContextProvider>
       <Main />
     </SubstrateContextProvider>
-
   )
 }

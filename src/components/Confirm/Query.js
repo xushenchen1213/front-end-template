@@ -21,7 +21,7 @@ export default function Query(props) {
     return [address, { signer: injector.signer }]
   }
 
-  const query = async ()=> {
+  const query = async () => {
     const fromAcct = await getFromAcct()
     axios({
       method: 'get',
@@ -30,15 +30,51 @@ export default function Query(props) {
         chain_address: fromAcct[0]
       }
     })
-    .then( response => {
-      console.log(response.data)
-      if (response.data.status === 0) {
-        props.getData(response.data.results)
+      .then(response => {
+        console.log(response.data)
+        if (response.data.status === 0) {
+          props.getData(response.data.results)
+        }
+      })
+  }
+  const queryRefused = async () => {
+    const fromAcct = await getFromAcct()
+    axios({
+      method: 'get',
+      url: 'https://timecoin.tech:8082/api/readRefusedApplyAdmin',
+      params: {
+        chain_address: fromAcct[0]
       }
-    })  
+    })
+      .then(response => {
+        console.log(response.data)
+        if (response.data.status === 0) {
+          props.getData(response.data.results)
+        }
+      })
+  }
+  const queryConfirmed = async () => {
+    const fromAcct = await getFromAcct()
+    axios({
+      method: 'get',
+      url: 'https://timecoin.tech:8082/api/readConfirmedApplyAdmin',
+      params: {
+        chain_address: fromAcct[0]
+      }
+    })
+      .then(response => {
+        console.log(response.data)
+        if (response.data.status === 0) {
+          props.getData(response.data.results)
+        }
+      })
   }
 
   return (
-    <Button style={{marginLeft: 20, color: '#3897e1', borderColor:'#3897e1'}} onClick={query}>查询待确认申请</Button>
+    <span>
+      <Button style={{ marginLeft: 20, color: '#3897e1', borderColor: '#3897e1' }} onClick={query}>查询待审核申请</Button>
+      <Button style={{ marginLeft: 20, color: '#3897e1', borderColor: '#3897e1' }} onClick={queryConfirmed}>查询已通过申请</Button>
+      <Button style={{ marginLeft: 20, color: '#3897e1', borderColor: '#3897e1' }} onClick={queryRefused}>查询已驳回申请</Button>
+    </span>
   )
 }

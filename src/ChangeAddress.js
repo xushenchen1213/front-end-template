@@ -70,10 +70,10 @@ export default function ApplyForCreatCoin() {
       <h2 style={{ color: '#3897e1' }}><DeliveredProcedureOutlined style={{ marginRight: 5 }} />公钥信息更新</h2>
       <Form style={{ marginLeft: 0, padding: 0 }} {...layout} form={form} name="control-hooks" onFinish={onFinish}>
         <Form.Item
-          style={{ height: 50 }}
+          style={{ height: 30 }}
           name="publicKey"
           label="原公钥"
-          labelCol={{ span: 4 }}
+          labelCol={{ span: 3 }}
           rules={[
             {
               required: true,
@@ -86,10 +86,10 @@ export default function ApplyForCreatCoin() {
             }} />
         </Form.Item>
         <Form.Item
-          style={{ height: 50 }}
+          style={{ height: 30 }}
           name="publicKeyNew"
           label="新公钥"
-          labelCol={{ span: 4 }}
+          labelCol={{ span: 3 }}
           rules={[
             {
               required: true,
