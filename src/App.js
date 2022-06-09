@@ -94,9 +94,6 @@ function User() {
           <Grid.Row stretched>
             <Balances getComm={getComm} />
           </Grid.Row>
-          <Grid.Row style={{ paddingTop: 0}} stretched>
-            <ConfirmForStudents comm={comm} style={{ marginLeft: 30 }} />
-          </Grid.Row>
           <Grid.Row style={{ paddingTop: 0}}>
             <Grid.Column style={{ paddingLeft: 0, margin: 0 }}>
               <div style={{ padding: 25, border: 1, borderRadius: 10, background: '#fff', opacity: 0.9 }}>
@@ -109,6 +106,9 @@ function User() {
                 <TransferCommunityCoin comm={comm} />
               </div>
             </Grid.Column>
+          </Grid.Row>
+          <Grid.Row style={{ paddingTop: 0}} stretched>
+            <ConfirmForStudents comm={comm} style={{ marginLeft: 30 }} />
           </Grid.Row>
         </Grid>
       </Container>

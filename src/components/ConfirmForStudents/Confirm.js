@@ -95,8 +95,8 @@ export default class Confirm extends Component {
         <h2 style={{color:'#3897e1'}}><FileDoneOutlined style={{marginRight: 5}}/>
         志愿记录认证
         <Select
-        defaultValue='请选择社区'
-        style={{ width: 110, marginLeft: 20 }}
+        placeholder='请选择社区'
+        style={{ width: 120, marginLeft: 20 }}
         onChange={this.handleChange}
       >
         {this.props.comm.map(comm => (
