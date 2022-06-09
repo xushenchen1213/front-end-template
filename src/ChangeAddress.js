@@ -1,11 +1,14 @@
 import React, { useState } from 'react'
-import { Form, Input, Button } from 'antd';
+import { Form, Input, Button, Select } from 'antd';
 import { useSubstrateState } from './substrate-lib'
 import { web3FromSource } from '@polkadot/extension-dapp'
 import axios from 'axios'
+// import url from './config/ReadUrl'
 import { DeliveredProcedureOutlined } from '@ant-design/icons'
-
-export default function ApplyForCreatCoin() {
+const { Option } = Select;
+//修改公钥地址
+//修改公钥地址
+export default function ApplyForCreatCoin(props) {
   const { currentAccount } = useSubstrateState()
   const getFromAcct = async () => {
     const {
@@ -35,17 +38,22 @@ export default function ApplyForCreatCoin() {
 
   const [form] = Form.useForm();
   const [status, setStatus] = useState()
+  const [commNow, setCommNow] = useState()
+  const handleChange = (value) => {
+    console.log(`selected ${value}`);
+    setCommNow(value)
+  };
 
   const onFinish = async (values) => {
-    console.log(values);
     const fromAcct = await getFromAcct()
     axios({
       method: 'get',
-      url: 'https://timecoin.tech:8082/api/updatePublicKey',
+      url: 'https://db.timecoin.tech:21511/api/updatePublicKey',
       params: {
+        commNow: commNow,
         from_address: fromAcct[0],
-        chain_address: values.publicKey,
-        publicKeyNew: values.publicKeyNew
+        chain_address: values.chainAddress,
+        publicKeyNew: values.newChainAddress
       }
     })
       .then(response => {
@@ -66,17 +74,17 @@ export default function ApplyForCreatCoin() {
 
 
   return (
-    <div>
+    <div style={{marginTop: 35}} >
       <h2 style={{ color: '#3897e1' }}><DeliveredProcedureOutlined style={{ marginRight: 5 }} />公钥信息更新</h2>
       <Form style={{ marginLeft: 0, padding: 0 }} {...layout} form={form} name="control-hooks" onFinish={onFinish}>
         <Form.Item
-          style={{ height: 30 }}
-          name="publicKey"
+          name="chainAddress"
           label="原公钥"
           labelCol={{ span: 3 }}
           rules={[
             {
               required: true,
+              message: '请输入原先的公钥地址'
             },
           ]}
         >
@@ -86,13 +94,13 @@ export default function ApplyForCreatCoin() {
             }} />
         </Form.Item>
         <Form.Item
-          style={{ height: 30 }}
-          name="publicKeyNew"
+          name="newChainAddress"
           label="新公钥"
           labelCol={{ span: 3 }}
           rules={[
             {
               required: true,
+              message: '请输入新的公钥地址'
             },
           ]}
         >
@@ -102,7 +110,16 @@ export default function ApplyForCreatCoin() {
             }} />
         </Form.Item>
 
-        <Form.Item style={{ marginLeft: 30, align: 'center' }} {...tailLayout}>
+        <Form.Item style={{ textAlign: 'center', marginRight: 130 }} {...tailLayout}>
+        <Select
+        placeholder='请选择社区'
+        style={{ width: 110, marginRight: 15 }}
+        onChange={handleChange}
+      >
+        {props.comm.map(comm => (
+          <Option key={comm} value={comm}>{comm}</Option>
+        ))}
+      </Select>
           <Button type="primary" htmlType="submit">
             提交
           </Button>

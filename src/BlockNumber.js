@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react'
+// eslint-disable-next-line no-unused-vars
 import { Statistic, Grid, Card, Icon } from 'semantic-ui-react'
 
 import { useSubstrateState } from './substrate-lib'
@@ -40,16 +41,19 @@ function Main(props) {
 
   return (
     <Grid.Column>
-      <Card>
+      <Card style={{width: '100%'}}>
         <Card.Content textAlign="center">
           <Statistic
             className="block_number"
-            label={(finalized ? 'Finalized' : 'Current') + ' Block'}
+            label={(finalized ? '已确认区块号' : '当前区块号')}
             value={blockNumber}
           />
         </Card.Content>
-        <Card.Content extra>
+        <Card.Content textAlign="center" extra>
+          <span style={{float: 'left'}}>
           <Icon name="time" /> {blockNumberTimer}
+          </span>
+          <span style={{marginRight: 26}}>CURRENT BLOCK</span>
         </Card.Content>
       </Card>
     </Grid.Column>

@@ -1,9 +1,9 @@
 {
-  "short_name": "PKU Time Bank",
-  "name": "PKU Time Bank",
+  "short_name": "timeChain",
+  "name": "timeChain",
   "icons": [
     {
-      "src": "favicon.ico",
+      "src": "logo.ico",
       "sizes": "64x64 48x48 32x32 16x16",
       "type": "image/x-icon"
     }

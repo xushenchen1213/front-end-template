@@ -6,11 +6,20 @@ import { useSubstrateState } from './substrate-lib'
 import { web3FromSource } from '@polkadot/extension-dapp'
 import { ContractPromise } from '@polkadot/api-contract'
 import { MoneyCollectOutlined } from '@ant-design/icons'
-
+// import url from './config/ReadUrl'
+import { Select } from 'antd';
+const { Option } = Select;
+//转社区币界面
+//转社区币界面
+//转社区币界面
 export default function Main(props) {
   const [formState, setFormState] = useState({ addressTo: '', amount: 0 })
   const [status, setStatus] = useState()
-
+  // eslint-disable-next-line no-unused-vars
+  const handleChange = (value) => {
+    console.log(`selected ${value}`);
+    // setCommNow(value)
+  };
   const onChange = (_, data) =>
     setFormState(prev => ({ ...prev, [data.state]: data.value }))
 
@@ -48,9 +57,10 @@ export default function Main(props) {
     const fromAcct = await getFromAcct()
     axios({
       method: 'get',
-      url: 'https://timecoin.tech:8082/api/getCommunity',
+      url: 'https://db.timecoin.tech:21511/api/getCommNow',
       params: {
-        address: fromAcct[0]
+        address: fromAcct[0],
+        commNow: formState.commNow
       }
     })
       .then(response => {
@@ -80,12 +90,12 @@ export default function Main(props) {
 
   return (
     <Grid.Column width={8}>
-      <h2 style={{ color: '#3897e1' }}><MoneyCollectOutlined style={{ marginRight: 5 }} />社区币转账</h2>
+      <h2 style={{ color: '#3897e1' }}><MoneyCollectOutlined style={{ marginRight: 5 }} />社区时间券兑付</h2>
       <Form>
         <Form.Field>
           <Input
             fluid
-            label="收款账户"
+            label="接收地址"
             type="text"
             maxLength="48"
             placeholder="address"
@@ -97,7 +107,7 @@ export default function Main(props) {
         <Form.Field>
           <Input
             fluid
-            label="转账金额"
+            label="兑付数量"
             type="float"
             state="amount"
             min="0"
@@ -106,9 +116,21 @@ export default function Main(props) {
             onChange={onChange}
           />
         </Form.Field>
+        <Form.Field style={{ marginBottom: 0, textAlign: 'center' }}>
+        <Select
+          placeholder='请选择社区'
+          style={{ width: 120, marginRight: 20 }}
+          onChange={onChange}
+        >
+          {props.comm.map(comm => (
+            <Option state='commNow' key={comm} value={comm}>{comm}</Option>
+          ))}
+        </Select>
+        <Button style={{ borderColor: '#2185d0', color: '#2185d0', background: 'white', margin: 0, paddingTop: 4 }}
+            disabled={amount === 0 || addressTo === '' ? true : false} onClick={onTransfer}>确认</Button>
+        </Form.Field>
         <Form.Field style={{ textAlign: 'center' }}>
-          <Button style={{ borderColor: '#2185d0', color: '#2185d0', background: 'white', margin: 0, paddingTop: 4, paddingButtom: 4 }}
-            disabled={amount === 0 || addressTo === '' ? true : false} onClick={onTransfer}>交易</Button>
+          
         </Form.Field>
       </Form>
       <div style={{ overflowWrap: 'break-word' }}>{status}</div>

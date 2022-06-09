@@ -1,22 +1,14 @@
-// import Background from '../public/assets/whiteClockDark.jpg'
-import React, { createRef } from 'react'
-import {
-  Container,
-  Dimmer,
-  Loader,
-  Grid,
-  Sticky,
-  Message,
-} from 'semantic-ui-react'
+import React, { createRef, useState } from 'react'
+import { Container, Dimmer, Loader, Grid, Sticky, Message } from 'semantic-ui-react'
 import 'semantic-ui-css/semantic.min.css'
-
 import { SubstrateContextProvider, useSubstrateState } from './substrate-lib'
 import { DeveloperConsole } from './substrate-lib/components'
 import AccountSelector from './AccountSelector'
 import Balances from './Balances'
 import BlockNumber from './BlockNumber'
-import Metadata from './Metadata'
-import NodeInfo from './NodeInfo'
+import TotalVolunTime from './TotalVolunTime'
+import TotalUsersNum from './TotalUsersNum'
+import TransactionNum from './TransactionNum'
 import TransferCommunityCoin from './TransferCommunityCoin'
 import Transfer from './Transfer'
 import ConfirmForStudents from './components/ConfirmForStudents/Confirm'
@@ -26,39 +18,35 @@ import ApplyForCreatCoin from './ApplyForCreatCoin'
 import ChangeAddress from './ChangeAddress'
 import { Routes, Route, Navigate } from "react-router-dom"
 
-// import asyncComponents from './AsyncLoading'
-// const User = asyncComponents(() => import('./Auser'))
-// const Admin = asyncComponents(() => import('./Admin'))
-import Appp from './Appp'
-import Apppp from './Apppp'
-
-
+//路由模块
 function Main() {
   return (
     <div>
       <Routes>
-        <Route path='/' exact element={<User />}></Route>
-        <Route path='/user' exact element={<User />}></Route>
+        <Route path='/' exact element={<User />} ></Route>
         <Route path='/admin' exact element={<Admin />}></Route>
-        <Route path='/index' exact element={<Appp />}></Route>
-        <Route path='/index1' exact element={<Apppp />}></Route>
+        <Route path='/user' exact element={<User />}></Route>
         <Route path='*' exact element={<Navigate to='/user' />}></Route>
       </Routes>
     </div>
   )
 }
+//背景样式
 const sectionStyle = {
   width: '100%',
   height: '100%',
-  // background: `url(${Background}) no-repeat center center fixed`,
   background: `#f5f6fa`,
-  backgroundSize: 'cover',
-  // opacity: 0.9,
-  // filter: 10
+  backgroundSize: 'cover'
 }
-
+//用户界面
+//用户界面
+//用户界面
 function User() {
+  const [comm, setComm] = useState([])
+  const getComm = (tableData) => {
 
+    setComm(tableData)
+  }
   const { apiState, apiError, keyringState } = useSubstrateState()
 
   const loader = text => (
@@ -97,23 +85,28 @@ function User() {
       </Sticky>
       <Container style={{ marginTop: 30 }}>
         <Grid stackable columns="equal">
+        <Grid.Row style={{ background: "#fff", opacity: 0.9, borderRadius: 10 }} >
+            <TotalUsersNum />
+            <TransactionNum />
+            <TotalVolunTime />
+            <BlockNumber />
+          </Grid.Row>
           <Grid.Row stretched>
-            <Balances />
+            <Balances getComm={getComm} />
           </Grid.Row>
-          <Grid.Row>
-            <ConfirmForStudents style={{ border: 1, background: '#fff', paddingTop: 15, paddingBottom: 15 }} />
+          <Grid.Row style={{ paddingTop: 0}} stretched>
+            <ConfirmForStudents comm={comm} style={{ marginLeft: 30 }} />
           </Grid.Row>
-          <Grid.Row>
+          <Grid.Row style={{ paddingTop: 0}}>
             <Grid.Column style={{ paddingLeft: 0, margin: 0 }}>
               <div style={{ padding: 25, border: 1, borderRadius: 10, background: '#fff', opacity: 0.9 }}>
-                <ApplyForCreatCoin />
+                <ApplyForCreatCoin comm={comm} />
               </div>
             </Grid.Column>
             <Grid.Column stretched style={{ paddingRight: 0, margin: 0 }}>
               <div style={{ border: 1, borderRadius: 10, padding: 25, opacity: 0.9, background: '#fff' }}>
                 <Transfer />
-                {/* <div style={{ color: '#fff' }}>--------------------------------------------------------------------------------------------------------------</div> */}
-                <TransferCommunityCoin />
+                <TransferCommunityCoin comm={comm} />
               </div>
             </Grid.Column>
           </Grid.Row>
@@ -123,7 +116,15 @@ function User() {
     </div>
   )
 }
+//管理员界面
+//管理员界面
+//管理员界面
 function Admin() {
+  const [comm, setComm] = useState([])
+  const getComm = (tableData) => {
+    setComm(tableData)
+  }
+
   const { apiState, apiError, keyringState } = useSubstrateState()
 
   const loader = text => (
@@ -163,39 +164,35 @@ function Admin() {
       </Sticky>
       <Container style={{ marginTop: 30 }}>
         <Grid stackable columns="equal">
-          <Grid.Row style={{ background: "#fff", opacity: 0.9, borderRadius: 10 }} stretched>
-            <NodeInfo />
-            <Metadata />
+          <Grid.Row style={{ background: "#fff", opacity: 0.9, borderRadius: 10 }} >
+            <TotalUsersNum />
+            <TransactionNum />
+            <TotalVolunTime />
             <BlockNumber />
-            <BlockNumber finalized />
           </Grid.Row>
           <Grid.Row stretched>
-            <Balances />
+            <Balances getComm={getComm} />
           </Grid.Row>
           <Grid.Row style={{ padding: 25, border: 1, borderRadius: 10, background: '#fff', opacity: 0.9 }}>
-            {/* <div style={{ padding: 25, border: 1, borderRadius: 10, background: '#fff', opacity: 0.9 }}> */}
             <Transfer />
-            <TransferCommunityCoin />
-            {/* </div> */}
+            <TransferCommunityCoin comm={comm} />
           </Grid.Row>
           <Grid.Row>
-            <Grid.Column style={{paddingLeft: 0}}>
+            <Grid.Column style={{ paddingLeft: 0 }}>
               <div style={{ padding: 25, border: 1, borderRadius: 10, background: '#fff', opacity: 0.9 }}>
-                <ApplyForCreatCoin />
+                <ApplyForCreatCoin comm={comm} />
               </div>
             </Grid.Column>
-            <Grid.Column style={{paddingRight: 0}} stretched>
-            <div style={{ padding: 25, border: 1, borderRadius: 10, background: '#fff', opacity: 0.9 }}>
-              <Community />
-              <ChangeAddress />
+            <Grid.Column style={{ paddingRight: 0 }} stretched>
+              <div style={{ padding: 25, border: 1, borderRadius: 10, background: '#fff', opacity: 0.9 }}>
+                <Community comm={comm} />
+                <ChangeAddress comm={comm} />
               </div>
             </Grid.Column>
           </Grid.Row>
-
-          <Grid.Row>
-            <Confirm style={{ marginLeft: 30 }} />
+          <Grid.Row style={{ paddingTop: 0 }}>
+            <Confirm comm={comm} style={{ marginLeft: 30 }} />
           </Grid.Row>
-
         </Grid>
       </Container>
       <DeveloperConsole />
@@ -203,10 +200,11 @@ function Admin() {
   )
 }
 
-export default function App() {
+export default function Appp() {
+
   return (
     <SubstrateContextProvider>
       <Main />
     </SubstrateContextProvider>
   )
-}
+};

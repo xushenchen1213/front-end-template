@@ -3,6 +3,7 @@ import { CopyToClipboard } from 'react-copy-to-clipboard'
 import { Avatar } from 'antd';
 import { UserOutlined } from '@ant-design/icons';
 
+
 import {
   Menu,
   Button,
@@ -15,13 +16,14 @@ import {
 
 import { useSubstrate, useSubstrateState } from './substrate-lib'
 
+
 const CHROME_EXT_URL =
   'https://chrome.google.com/webstore/detail/polkadot%7Bjs%7D-extension/mopnmbcafieddcagagdcbnhejhlodfdd'
 const FIREFOX_ADDON_URL =
   'https://addons.mozilla.org/en-US/firefox/addon/polkadot-js-extension/'
 
 const acctAddr = acct => (acct ? acct.address : '')
-
+//网页顶栏
 function Main(props) {
   const {
     setCurrentAccount,
@@ -47,8 +49,11 @@ function Main(props) {
       setCurrentAccount(keyring.getPair(initialAddress))
   }, [currentAccount, setCurrentAccount, keyring, initialAddress])
 
+
+
   const onChange = addr => {
     setCurrentAccount(keyring.getPair(addr))
+    console.log(currentAccount);
   }
 
   return (
@@ -65,9 +70,9 @@ function Main(props) {
       <Container>
         <Menu.Menu>
           <Image
-            src={`${process.env.PUBLIC_URL}/assets/time_logo.png`}
+            src={`${process.env.PUBLIC_URL}/assets/timeChain.png`}
             size="small"
-            style={{marginTop:10, color:'#3897e1'}} 
+            style={{ marginTop: 10, color: '#3897e1' }}
           />
         </Menu.Menu>
         <Menu.Menu position="right" style={{ alignItems: 'center' }}>
@@ -89,7 +94,7 @@ function Main(props) {
               basic
               circular
               size='medium'
-              style={{padding: 2}}
+              style={{ padding: 2 }}
               color={currentAccount ? 'blue' : 'red'}
             ><Avatar style={{ backgroundColor: '#3897e1' }} icon={<UserOutlined />} /></Button>
           </CopyToClipboard>
@@ -132,7 +137,7 @@ function BalanceAnnotation(props) {
   }, [api, currentAccount])
 
   return currentAccount ? (
-    <Label pointing="left" style={{paddingTop: 14, paddingBottom: 14}}>
+    <Label pointing="left" style={{ paddingTop: 14, paddingBottom: 14 }}>
       <Icon name="money" color="blue" />
       {(parseFloat(String(accountBalance).replace(/,/g, '')) / 1000000000000).toFixed(2)}
     </Label>

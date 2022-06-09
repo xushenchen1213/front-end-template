@@ -1,4 +1,5 @@
 import React from 'react'
+// import url from '../../config/ReadUrl'
 import { Button } from 'antd';
 import axios from 'axios'
 import { useSubstrateState } from '../../substrate-lib'
@@ -6,6 +7,8 @@ import { web3FromSource } from '@polkadot/extension-dapp'
 
 
 export default function Query(props) {
+  const data = [{id: 0, name: '张三', chainAddress: '5xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxrxxxx', 
+  hours: 'x', commName: 'xx社区', serviceContent: '志愿服务', date: '20xx-xx-xx'}]
 
   const { currentAccount } = useSubstrateState()
   const getFromAcct = async () => {
@@ -21,68 +24,65 @@ export default function Query(props) {
   }
 
   const query = async () => {
+    props.changeBack()
     const fromAcct = await getFromAcct()
     axios({
       method: 'get',
-      url: 'https://timecoin.tech:8082/api/readApplyUser',
+      url: 'https://db.timecoin.tech:21511/api/readApplyUser',
       params: {
-        chain_address: fromAcct[0]
+        chainAddress: fromAcct[0],
+        commNow: props.commNow
       }
     })
       .then(response => {
-        console.log(response.data)
         if (response.data.status === 0) {
           props.getData(response.data.result)
         }
         if (response.data.status === 1) {
-          props.getData([{
-            eventId: 0, name: '张三', publicKey: '5xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxrxxxx',
-            hours: 'x', serviceContent: '志愿服务', date: '20xx-xx-xx'
-          }])
-        }
-      })
-  }
-  const queryConfirmed = async () => {
-    const fromAcct = await getFromAcct()
-    axios({
-      method: 'get',
-      url: 'https://timecoin.tech:8082/api/readConfirmedApplyUser',
-      params: {
-        chain_address: fromAcct[0]
-      }
-    })
-      .then(response => {
-        console.log(response.data)
-        if (response.data.status === 0) {
-          props.getData(response.data.result)
-        }
-        if (response.data.status === 1) {
-          props.getData([{
-            eventId: 0, name: '张三', publicKey: '5xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxrxxxx',
-            hours: 'x', serviceContent: '志愿服务', date: '20xx-xx-xx'
-          }])
+          props.getData(data)
+          alert('您未有相关申请记录')
         }
       })
   }
   const queryRefused = async () => {
+    props.changeColumns()
     const fromAcct = await getFromAcct()
     axios({
       method: 'get',
-      url: 'https://timecoin.tech:8082/api/readRefusedApplyUser',
+      url: 'https://db.timecoin.tech:21511/api/readRefusedApplyUser',
       params: {
-        chain_address: fromAcct[0]
+        chainAddress: fromAcct[0],
+        commNow: props.commNow
       }
     })
       .then(response => {
-        console.log(response.data)
         if (response.data.status === 0) {
           props.getData(response.data.result)
         }
         if (response.data.status === 1) {
-          props.getData([{
-            eventId: 0, name: '张三', publicKey: '5xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxrxxxx',
-            hours: 'x', serviceContent: '志愿服务', date: '20xx-xx-xx'
-          }])
+          props.getData(data)
+          alert('您未有相关申请记录')
+        }
+      })
+  }
+  const queryConfirmed = async () => {
+    props.changeColumns()
+    const fromAcct = await getFromAcct()
+    axios({
+      method: 'get',
+      url: 'https://db.timecoin.tech:21511/api/readConfirmedApplyUser',
+      params: {
+        chainAddress: fromAcct[0],
+        commNow: props.commNow
+      }
+    })
+      .then(response => {
+        if (response.data.status === 0) {
+          props.getData(response.data.result)
+        }
+        if (response.data.status === 1) {
+          props.getData(data)
+          alert('您未有相关申请记录')
         }
       })
   }

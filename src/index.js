@@ -3,12 +3,12 @@ import ReactDOM from 'react-dom'
 import 'antd/dist/antd.min.css'
 // import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import { BrowserRouter} from 'react-router-dom'
-import Appp from './Appp'
+import App from './App'
 
 ReactDOM.render(
   // <React.StrictMode>
     <BrowserRouter>
-      <Appp />
+      <App />
     </BrowserRouter>,
 
   document.getElementById('root')

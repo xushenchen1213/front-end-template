@@ -1,7 +1,7 @@
 import React, {useState} from 'react'
 import { Button } from 'antd';
 import axios from 'axios'
-
+// import url from '../../config/ReadUrl'
 
 export default function Action(props) {
   const [isOn, setIsOn] = useState(false)
@@ -12,9 +12,9 @@ export default function Action(props) {
     // recall application
     axios({
       method: 'get',
-      url: 'https://timecoin.tech:8082/api/recall',
+      url: 'https://db.timecoin.tech:21511/api/recall',
       params:{
-        eventId: props.record.eventId
+        id: props.record.id
       }
     })
     .then( response => {
@@ -27,7 +27,7 @@ export default function Action(props) {
   }
 
   return (
-    <div style={{minWidth: '15em' }}>
+    <div style={{minWidth: '12em' }}>
       <Button onClick={recall} disabled={isOn}>撤回申请</Button>
       <span>{status}</span>
     </div>

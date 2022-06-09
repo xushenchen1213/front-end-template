@@ -1,26 +1,85 @@
-import React, { Component } from 'react';
-import { Button, message } from 'antd';
+
+import React, { useState } from 'react';
+import { Button, message, Select } from 'antd';
 import * as XLSX from 'xlsx';
 import styles from './community.less';
 import axios from 'axios'
-import Submit from './Submit'
-import {CommentOutlined} from '@ant-design/icons'
+// import url from '../../config/ReadUrl'
+import { web3FromSource } from '@polkadot/extension-dapp'
+import { ContractPromise } from '@polkadot/api-contract'
+import { useSubstrateState } from '../../substrate-lib'
+import { CommentOutlined } from '@ant-design/icons'
+const { Option } = Select;
 
-class Excel extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      comm: [], 
-      isNotGood: true,
-      notGood: false,
-      volunList: [],
-      checkStatus: '',
-      newRegisterStatus: ''
-    };
+
+
+export default function Comm(props) {
+  const { api, currentAccount } = useSubstrateState()
+  const [commList, setCommList] = useState([])
+  const [volunList, setVolunList] = useState([])
+  const [isNotGood, setIsNotGood] = useState(true)
+  const [notGood, setNotGood] = useState(false)
+  const [checkStatus, setCheckStatus] = useState('')
+  const [commNow, setCommNow] = useState('')
+  const [newRegisterStatus, setNewRegisterStatus] = useState('')
+
+  const getFromAcct = async () => {
+    const {
+      address,
+      meta: { source, isInjected },
+    } = currentAccount
+
+    if (!isInjected) {
+      return [currentAccount]
+    }
+    // currentAccount is injected from polkadot-JS extension, need to return the addr and signer object.
+    // ref: https://polkadot.js.org/docs/extension/cookbook#sign-and-send-a-transaction
+    const injector = await web3FromSource(source)
+    return [address, { signer: injector.signer }]
+  }
+  const onSubmit = async () => {
+    const fromAcct = await getFromAcct()
+
+    // get commName, commAddress, abi
+    axios({
+      method: 'get',
+      url: 'https://db.timecoin.tech:21511/api/getCommNow',
+      params: {
+        commNow: commNow
+      }
+    })
+      .then(response => {
+        //register into community
+        const value = 0;
+        const gasLimit = 30000n * 1000000n;
+        const contract = new ContractPromise(api, response.data.abi, response.data.commAddress);
+        contract.tx
+          .enrollVolunteers({ value, gasLimit }, volunList)
+          .signAndSend(...fromAcct, (result) => {
+            console.log(result);
+            if (result.contractEvents) {
+              setNewRegisterStatus('😉 加入成功！')
+              commList.forEach((item) => {
+                axios({
+                  method: 'get',
+                  url: 'https://db.timecoin.tech:21511/api/submitUser',
+                  params: {
+                    address: item.address,
+                    commName1: response.data.commName1,
+                    commName2: commNow
+                  }
+                })
+              })
+            }
+            if (result.dispatchError) {
+              setNewRegisterStatus('😞 加入失败！')
+            }
+          });
+      })
   }
 
-  onImportExcel = file => {
-    this.setState({notGood: false})
+  const onImportExcel = file => {
+    setNotGood(false)
     // 获取上传的文件对象
     const { files } = file.target;
     // 通过FileReader对象读取文件
@@ -31,7 +90,7 @@ class Excel extends Component {
         const { result } = event.target;
         // 以二进制流方式读取得到整份excel表格对象
         const workbook = XLSX.read(result, { type: 'binary' });
-         // 存储获取到的数据
+        // 存储获取到的数据
         let data = [];
         // 遍历每张工作表进行读取（这里默认只读取第一张表）
         for (const sheet in workbook.Sheets) {
@@ -45,8 +104,7 @@ class Excel extends Component {
         // 最终获取到并且格式化后的 json 数据
         message.success('上传成功！')
 
-        this.setState({comm: that})
-        console.log(this.state.comm);
+        setCommList(that)
 
       } catch (e) {
         // 这里可以抛出文件类型错误不正确的相关提示
@@ -55,79 +113,83 @@ class Excel extends Component {
     };
     // 以二进制方式打开文件
     fileReader.readAsBinaryString(files[0]);
-    this.setState({isNotGood: true})
-
-
+    setIsNotGood(true)
   }
-  onCheck = () =>{
-    const that = this
+
+  const onCheck = () => {
     var address = [];
-    var repeat = false;
-    for(var i=0;i<that.state.comm.length;i++){
-        if(address.indexOf(that.state.comm[i].address) !== -1){  
-          alert('文件及内容不合规范')
-          repeat = true
-          return
-        }
-        else {
-          address.push(that.state.comm[i].address);
-          that.setState({volunList: address})
-          console.log(address);
-        }
-    } 
-    for (let i=0; i<that.state.comm.length; i++ ) {
+    let repeat = false;
+    for (var i = 0; i < commList.length; i++) {
+      if (address.indexOf(commList[i].address) !== -1) {
+        alert('文件及内容不合规范')
+        repeat = true
+        return
+      }
+      else {
+        address.push(commList[i].address);
+        setVolunList(address)
+      }
+    }
+    for (let i = 0; i < commList.length; i++) {
       if (repeat) {
         return
       }
-      if (!that.state.notGood){
-        console.log(that.state.comm[i]);
+      if (!notGood) {
         axios({
           method: 'get',
-          url: 'https://timecoin.tech:8082/api/checkUser',
+          url: 'https://db.timecoin.tech:21511/api/checkUser',
           params: {
-            address: that.state.comm[i].address,
-            userId: that.state.comm[i].userId
+            address: commList[i].address,
+            commNow: commNow
           }
         })
           .then(response => {
-            console.log(response.data.msg);
-            if (response.data.status !== 0){
-              that.setState({isNotGood: true})
-              that.setState({notGood: true})
-              that.setState({checkStatus: '😞名单不合格'})
-              alert(that.state.comm[i].address + '已加入某社区')
+            console.log(response);
+            if (response.data.status !== 0) {
+              setIsNotGood(true)
+              setNotGood(true)
+              setCheckStatus('😞名单不合格')
+              alert(commList[i].address + '已加入某社区')
             }
             else {
-              that.setState({isNotGood: false})
-              that.setState({notGood: false})
-              that.setState({checkStatus: '😉名单合格！'})
-              console.log(that.state.isNotGood);
+              setIsNotGood(false)
+              setNotGood(false)
+              setCheckStatus('😉名单合格！')
             }
           })
       }
-      else break            
+      else break
     }
   }
-  onNewRegister = (msg) =>{
-    // console.log(msg);
-    this.setState({newRegisterStatus: msg})
-  }
+  const handleChange = (value) => {
+    console.log(`selected ${value}`);
+    setCommNow(value)
+  };
 
-  render() {
-    return (
-      <div style={{height: 165}}>
-        <h2 style={{color:'#3897e1'}}><CommentOutlined style={{marginRight: 5, marginBottom: 10}}/>社区注册</h2>
-        <Button style={{width: 340, height:32, backgroundColor: 'white', border:'1'}}>
-          <input style={{width: 340}} type='file' accept='.xlsm' onChange={this.onImportExcel} />
-        </Button>
-        <Button type="primary" style={{ marginLeft: 22 }} onClick={this.onCheck}>查验</Button>
-        <Submit isNG={this.state.isNotGood} onNewRegister={this.onNewRegister} comm={this.state.comm} volunList={this.state.volunList} />
-        <p style={{marginTop: 15, fontSize: 14}} className={styles['upload-tip']}>支持 .xlsm 格式的文件</p>
-        <span style={{ marginTop: 10 }}>{this.state.checkStatus}{this.state.newRegisterStatus}</span>
-      </div >
+  return (
+    <div style={{ height: 165 }}>
+      <h2 style={{ color: '#3897e1' }}><CommentOutlined style={{ marginRight: 5, marginBottom: 10 }} />社区注册</h2>
+      <Button style={{ width: '100%', height: 32, backgroundColor: 'white', border: '1' }}>
+        <input style={{ width: '100%' }} type='file' accept='.xlsm, .xlsx, .xls' onChange={onImportExcel} />
+      </Button>
+      <p style={{ marginTop: 15, fontSize: 14 }} className={styles['upload-tip']}>
+        支持 .xls  .xlsx  .xlsm 格式的文件
+        <span>{checkStatus}{newRegisterStatus}</span>
+      </p>
+      <span style={{ display: 'flex', justifyContent: 'center', align: 'center'}}>
+        <Select
+          placeholder='请选择社区'
+          style={{ width: 110}}
+          onChange={handleChange}
+        >
+          {props.comm.map(comm => (
+            <Option key={comm} value={comm}>{comm}</Option>
+          ))}
+        </Select>
 
-    );
-  }
-}
-
-export default Excel;
+        <Button style={{marginLeft:15}} type="primary" onClick={onCheck}>查验</Button>
+        <Button disabled={isNotGood} onClick={onSubmit}>注册</Button>
+      </span>
+    </div >
+  );
+};
