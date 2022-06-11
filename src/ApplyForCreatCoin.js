@@ -69,10 +69,11 @@ export default function ApplyForCreatCoin(props) {
   }
 
   return (
-    <div>
+    <div style={{width: '100%'}}>
       <h2 style={{ color: '#3897e1' }}><DeliveredProcedureOutlined style={{ marginRight: 5, marginBottom: 10 }} />志愿服务记录提交</h2>
-      <Form {...layout} form={form} name="control-hooks" onFinish={onFinish}>
+      <Form style={{width: '100%'}} {...layout} form={form} name="control-hooks" onFinish={onFinish}>
         <Form.Item
+          style={{width: '100%'}}
           name="name"
           label="姓名"
           labelCol={{ span: 4 }}
@@ -83,8 +84,9 @@ export default function ApplyForCreatCoin(props) {
             },
           ]}
         >
-          <Input style={{ width: 400 }}
-            maxLength={10} />
+          <Input 
+          style={{width: '100%'}}
+          maxLength={10} />
         </Form.Item>
         <Form.Item
           name="chainAddress"
@@ -98,7 +100,7 @@ export default function ApplyForCreatCoin(props) {
           ]}
         >
           <Input
-            style={{ width: 400 }}
+            style={{width: '100%'}}
             maxLength={48} />
         </Form.Item>
         <Form.Item
@@ -113,9 +115,7 @@ export default function ApplyForCreatCoin(props) {
           ]}
         >
           <InputNumber
-            style={{
-              width: 400,
-            }}
+            style={{width: '100%'}}
             addonAfter="小时"
             min="0"
             max="24"
@@ -135,7 +135,7 @@ export default function ApplyForCreatCoin(props) {
             },
           ]}
         >
-          <DatePicker onChange={onChange} disabledDate={onDisabledDate} style={{ width: 400 }} />
+          <DatePicker onChange={onChange} disabledDate={onDisabledDate} style={{width: '100%'}} />
 
         </Form.Item>
         <Form.Item
@@ -150,7 +150,7 @@ export default function ApplyForCreatCoin(props) {
         >
           <Select
             placeholder='请选择社区'
-            style={{ width: 400, marginRight: 20 }}
+            style={{width: '100%'}}
             onChange={handleChange}
           >
             {props.comm.map(comm => (
@@ -159,6 +159,7 @@ export default function ApplyForCreatCoin(props) {
           </Select>
         </Form.Item>
         <Form.Item
+          style={{width: '100%'}}
           name="serviceContent"
           label="服务内容"
           labelCol={{ span: 4 }}
@@ -170,9 +171,23 @@ export default function ApplyForCreatCoin(props) {
           ]}
         >
           <Input
-            style={{ width: 400 }}
             maxLength={24} />
         </Form.Item>
+        {/* <Form.Item
+          style={{width: '100%'}}
+          name="serviceContent"
+          label="现在社区"
+          labelCol={{ span: 4 }}
+          rules={[
+            {
+              required: true,
+              message: '请填写服务内容'
+            },
+          ]}
+        >
+          <Input
+            maxLength={24} value='1' disabled/>
+        </Form.Item> */}
 
         <Form.Item style={{ align: 'center', marginBottom: 0 }} {...tailLayout}>
           <Button type="primary" htmlType="submit">

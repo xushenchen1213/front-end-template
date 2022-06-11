@@ -91,7 +91,7 @@ export default class Confirm extends Component {
 
   render() {
     return (
-      <div style={{padding: 20, borderRadius: 10, border: 1, opacity: 0.9, background: '#fff'}}>
+      <div style={{width: '100%', padding: 20, borderRadius: 10, border: 1, opacity: 0.9, background: '#fff'}}>
         <h2 style={{color:'#3897e1'}}><FileDoneOutlined style={{marginRight: 5}}/>
         志愿记录认证
         <Select
@@ -108,7 +108,7 @@ export default class Confirm extends Component {
         </h2>
       <Table
       rowKey="id"
-      style={{width: 1115}}
+      style={{width: '100%'}}
       columns={this.state.columns}
       dataSource={this.state.data}
     />

@@ -52,7 +52,8 @@ export default function ApplyForCreatCoin(props) {
       params: {
         commNow: commNow,
         from_address: fromAcct[0],
-        chain_address: values.chainAddress,
+        chainAddress: values.chainAddress,
+        // chain_address: values.chainAddress,
         publicKeyNew: values.newChainAddress
       }
     })

@@ -37,46 +37,7 @@ export default function Comm(props) {
     const injector = await web3FromSource(source)
     return [address, { signer: injector.signer }]
   }
-  const onSubmit = async () => {
-    const fromAcct = await getFromAcct()
 
-    // get commName, commAddress, abi
-    axios({
-      method: 'get',
-      url: 'https://db.timecoin.tech:21511/api/getCommNow',
-      params: {
-        commNow: commNow
-      }
-    })
-      .then(response => {
-        //register into community
-        const value = 0;
-        const gasLimit = 30000n * 1000000n;
-        const contract = new ContractPromise(api, response.data.abi, response.data.commAddress);
-        contract.tx
-          .enrollVolunteers({ value, gasLimit }, volunList)
-          .signAndSend(...fromAcct, (result) => {
-            console.log(result);
-            if (result.contractEvents) {
-              setNewRegisterStatus('😉 加入成功！')
-              commList.forEach((item) => {
-                axios({
-                  method: 'get',
-                  url: 'https://db.timecoin.tech:21511/api/submitUser',
-                  params: {
-                    address: item.address,
-                    commName1: response.data.commName1,
-                    commName2: commNow
-                  }
-                })
-              })
-            }
-            if (result.dispatchError) {
-              setNewRegisterStatus('😞 加入失败！')
-            }
-          });
-      })
-  }
 
   const onImportExcel = file => {
     setNotGood(false)
@@ -120,17 +81,22 @@ export default function Comm(props) {
     var address = [];
     let repeat = false;
     for (var i = 0; i < commList.length; i++) {
-      if (address.indexOf(commList[i].address) !== -1) {
+      const chainAddress = '账号'
+      const commId = '社区编号'
+      console.log(commList[i][chainAddress]);
+      console.log(commList[i][commId]);
+      if (address.indexOf(commList[i][chainAddress]) !== -1) {
         alert('文件及内容不合规范')
         repeat = true
         return
       }
       else {
-        address.push(commList[i].address);
+        address.push(commList[i][chainAddress]);
         setVolunList(address)
       }
     }
     for (let i = 0; i < commList.length; i++) {
+      const chainAddress = '账号'
       if (repeat) {
         return
       }
@@ -139,17 +105,16 @@ export default function Comm(props) {
           method: 'get',
           url: 'https://db.timecoin.tech:21511/api/checkUser',
           params: {
-            address: commList[i].address,
+            address: commList[i][chainAddress],
             commNow: commNow
           }
         })
           .then(response => {
-            console.log(response);
             if (response.data.status !== 0) {
               setIsNotGood(true)
               setNotGood(true)
               setCheckStatus('😞名单不合格')
-              alert(commList[i].address + '已加入某社区')
+              alert(commList[i][chainAddress] + '已加入某社区')
             }
             else {
               setIsNotGood(false)
@@ -160,6 +125,50 @@ export default function Comm(props) {
       }
       else break
     }
+  }
+
+  const onSubmit = async () => {
+    const fromAcct = await getFromAcct()
+
+    // get commName, commAddress, abi
+    axios({
+      method: 'get',
+      url: 'https://db.timecoin.tech:21511/api/getCommNow',
+      params: {
+        commNow: commNow
+      }
+    })
+      .then(response => {
+        //register into community
+        const value = 0;
+        const gasLimit = 30000n * 1000000n;
+        const contract = new ContractPromise(api, response.data.abi, response.data.commAddress);
+        contract.tx
+          .enrollVolunteers({ value, gasLimit }, volunList)
+          .signAndSend(...fromAcct, (result) => {
+            console.log(result);
+            if (result.contractEvents) {
+              setNewRegisterStatus('😉 加入成功！')
+              commList.forEach((item) => {
+                const chainAddress = '账号'
+                const commId = '社区编号'
+                axios({
+                  method: 'get',
+                  url: 'https://db.timecoin.tech:21511/api/submitUser',
+                  params: {
+                    chainAddress: item[chainAddress],
+                    commId: item[commId],
+                    commName1: response.data.commName1,
+                    commName2: commNow
+                  }
+                })
+              })
+            }
+            if (result.dispatchError) {
+              setNewRegisterStatus('😞 加入失败！')
+            }
+          });
+      })
   }
   const handleChange = (value) => {
     console.log(`selected ${value}`);

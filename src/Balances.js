@@ -33,6 +33,7 @@ export default function Main(props) {
   const handleChange = (value) => {
     console.log(`selected ${value}`);
     setCommNow(value)
+    props.getcommNow(value)
   };
 
   useEffect(() => {
@@ -183,7 +184,8 @@ export default function Main(props) {
         .then(async (response) => {
           response.data.status === 0 ?
             commName = response.data.commName : commName = '/'
-          setCommNames(commName);
+          setCommNow(commName)
+          props.getcommNow(commName)
           if (response.data.status === 1) {
             addresses.map(async (address, index) => {
               isSame[address] = '/'
@@ -241,7 +243,7 @@ export default function Main(props) {
   }
 
   return (
-    <Grid.Column style={{ border: 1, borderRadius: 10, background: '#fff', opacity: 0.9, padding: 20 }}>
+    <Grid.Column style={{ width: '100%', border: 1, borderRadius: 10, background: '#fff', opacity: 0.9, padding: 20 }}>
       <h2 style={{ color: '#3897e1' }}><BankOutlined style={{ marginRight: 5 }} />
         用户信息
         <Select
@@ -264,35 +266,35 @@ export default function Main(props) {
           No accounts to be shown
         </Label>
       ) : (
-        <Table celled striped size="small">
+        <Table style={{width: '100%'}} celled striped size="small">
           <Table.Body>
             <Table.Row>
-              <Table.Cell width={3} textAlign="right">
+              <Table.Cell textAlign="right">
                 <strong>账号名称</strong>
               </Table.Cell>
-              <Table.Cell width={10}>
+              <Table.Cell>
                 <strong>公钥地址</strong>
               </Table.Cell>
-              <Table.Cell width={6}>
+              <Table.Cell>
                 <strong>流通时间券余额</strong>
               </Table.Cell>
-              <Table.Cell width={6}>
+              <Table.Cell>
                 <strong>所在社区</strong>
               </Table.Cell>
-              <Table.Cell width={6}>
+              <Table.Cell>
                 <strong>社区时间券余额</strong>
               </Table.Cell>
-              <Table.Cell width={6}>
+              <Table.Cell>
                 <strong>志愿时长</strong>
               </Table.Cell>
             </Table.Row>
             {accounts.map(account => (
               <Table.Row key={account.address}>
-                <Table.Cell width={3} textAlign="right">
+                <Table.Cell textAlign="right">
                   {account.meta.name.replace('(polkadot-js)', '')}
                 </Table.Cell>
-                <Table.Cell width={10}>
-                  <span style={{ display: 'inline-block', minWidth: '31em' }}>
+                <Table.Cell>
+                  <span style={{ display: 'inline-block', marginRight: 8}}>
                     {account.address}
                   </span>
                   <CopyToClipboard text={account.address}>
@@ -306,18 +308,18 @@ export default function Main(props) {
                     />
                   </CopyToClipboard>
                 </Table.Cell>
-                <Table.Cell width={6} style={{ minWidth: '9em' }}>
+                <Table.Cell>
                   {(parseFloat(String(balances[account.address]).replace(/,/g, '')) / 1000000000000).toFixed(2)}
                 </Table.Cell>
-                <Table.Cell width={6} style={{ minWidth: '9em' }}>
+                <Table.Cell>
                   {commNames[account.address] ? commNames[account.address] : '/'}
                 </Table.Cell>
-                <Table.Cell width={6} style={{ minWidth: '9em' }}>
+                <Table.Cell>
                   {commNames[account.address]&&commNames[account.address]!=='/'
                     ?  (parseFloat(String(commBalances[account.address]).replace(/,/g, '')) / 1000000000000).toFixed(2)
                     :'/'}
                 </Table.Cell>
-                <Table.Cell width={6} style={{ minWidth: '9em' }}>
+                <Table.Cell>
                   {commNames[account.address]&&commNames[account.address]!=='/'
                     ? (parseFloat(String(commVolunTimes[account.address]).replace(/,/g, '')) / 1000).toFixed(2)
                     : '/'}

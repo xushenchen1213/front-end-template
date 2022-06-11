@@ -11,6 +11,7 @@ import TotalUsersNum from './TotalUsersNum'
 import TransactionNum from './TransactionNum'
 import TransferCommunityCoin from './TransferCommunityCoin'
 import Transfer from './Transfer'
+import MemberList from './components/MemberList/Confirm'
 import ConfirmForStudents from './components/ConfirmForStudents/Confirm'
 import Confirm from './components/Confirm/Confirm'
 import Community from './components/Community/Community'
@@ -121,8 +122,12 @@ function User() {
 //管理员界面
 function Admin() {
   const [comm, setComm] = useState([])
+  const [commNow, setCommNow] = useState('')
   const getComm = (tableData) => {
     setComm(tableData)
+  }
+  const getCommNow = (commNow) => {
+    setCommNow(commNow)
   }
 
   const { apiState, apiError, keyringState } = useSubstrateState()
@@ -171,7 +176,7 @@ function Admin() {
             <BlockNumber />
           </Grid.Row>
           <Grid.Row stretched>
-            <Balances getComm={getComm} />
+            <Balances getComm={getComm} getcommNow={getCommNow} />
           </Grid.Row>
           <Grid.Row style={{ padding: 25, border: 1, borderRadius: 10, background: '#fff', opacity: 0.9 }}>
             <Transfer />
@@ -180,18 +185,21 @@ function Admin() {
           <Grid.Row>
             <Grid.Column style={{ paddingLeft: 0 }}>
               <div style={{ padding: 25, border: 1, borderRadius: 10, background: '#fff', opacity: 0.9 }}>
-                <ApplyForCreatCoin comm={comm} />
+                <ApplyForCreatCoin comm={comm} commNow={commNow} />
               </div>
             </Grid.Column>
             <Grid.Column style={{ paddingRight: 0 }} stretched>
               <div style={{ padding: 25, border: 1, borderRadius: 10, background: '#fff', opacity: 0.9 }}>
                 <Community comm={comm} />
-                <ChangeAddress comm={comm} />
+                <ChangeAddress comm={comm} commNow={commNow} />
               </div>
             </Grid.Column>
           </Grid.Row>
           <Grid.Row style={{ paddingTop: 0 }}>
-            <Confirm comm={comm} style={{ marginLeft: 30 }} />
+            <Confirm comm={comm} commNow={commNow} style={{ marginLeft: 30 }} />
+          </Grid.Row>
+          <Grid.Row style={{ paddingTop: 0 }}>
+            <MemberList comm={comm} commNow={commNow} style={{ marginLeft: 30 }} />
           </Grid.Row>
         </Grid>
       </Container>

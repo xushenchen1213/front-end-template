@@ -16,7 +16,8 @@ function Main(props) {
         url: 'https://db.timecoin.tech:21511/api/numberOfUsers',
       })
       .then(res =>{
-        const count = 'count(distinct chain_address)'
+        const count = 'count(distinct chainAddress)'
+        // const count = 'count(distinct chain_address)'
         const number = res.data.result[count]
         setNumOfUsers(number)
         resolve()
