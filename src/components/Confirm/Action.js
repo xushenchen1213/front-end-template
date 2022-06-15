@@ -1,5 +1,3 @@
-/* eslint-disable no-unused-vars */
-
 import React, { useState } from 'react'
 // import url from '../../config/ReadUrl'
 import { Button } from 'antd';
@@ -37,14 +35,19 @@ export default function Action(props) {
       method: 'get',
       url: 'https://db.timecoin.tech:21511/api/getCommNow',
       params: {
-        commNow: props.commNow
+        commNow: props.commNow,
+        fromAcct: fromAcct[0]
       }
     })
       .then(response => {
+        console.log(props.commNow);
+        console.log(response);
         if (response.data.status === 0) {
           const value = 0;
           const gasLimit = 30000n * 1000000n;
-          const contract = new ContractPromise(api, response.data.abi, response.data.commAddress);
+          const abi = response.data.abi
+          const commAddress = response.data.commAddress     
+          const contract = new ContractPromise(api, abi, commAddress);
           const id = props.record.id
           const chainAddress = props.record.chainAddress
           const volunTime = props.record.hours * 1000
@@ -61,11 +64,13 @@ export default function Action(props) {
                 })
                   .then(response => {
                     setIsOn({ isOn: true })
-                    setStatus('😉 已铸币')
+                    setStatus('😉 √')
+                    props.getStatus('😉 √')
                   })
               }
               if (result.dispatchError) {
-                setStatus('😞 失败了')
+                setStatus('😞 X')
+                props.getStatus('😞 X')
               }
             });
         }
@@ -73,12 +78,14 @@ export default function Action(props) {
   }
   const refuse = async () => {
     if (props.record.id === 0) return
+    const fromAcct = await getFromAcct()
     // get community messages
     axios({
       method: 'get',
       url: 'https://db.timecoin.tech:21511/api/getCommNow',
       params: {
-        commNow: props.commNow
+        commNow: props.commNow,
+        fromAcct: fromAcct[0]
       }
     })
       .then(response => {
@@ -91,18 +98,18 @@ export default function Action(props) {
               id: id
             }
           })
-            .then(response => {
+            .then(() => {
               setIsOn({ isOn: true })
-              setStatus('😞 已拒绝')
+              setStatus('😞 X')
             })
         }
       });
   }
 
 return (
-  <div style={{ minWidth: '15em' }}>
-    <Button onClick={accept} style={{ paddingLeft: 4, paddingRight: 4 }} disabled={isOn}>通过申请</Button>
-    <Button onClick={refuse} style={{ marginLeft: 10, paddingLeft: 4, paddingRight: 4 }} disabled={isOn}>拒绝申请</Button>
+  <div>
+    <div style={{marginBottom: 4}}><Button onClick={accept} style={{ paddingLeft: 4, paddingRight: 4 }} disabled={isOn}>通过</Button></div>
+    <div><Button onClick={refuse} style={{ paddingLeft: 4, paddingRight: 4 }} disabled={isOn}>拒绝</Button></div>
     <span>{status}</span>
   </div>
 

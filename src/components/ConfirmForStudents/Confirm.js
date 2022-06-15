@@ -1,11 +1,11 @@
 import React, { Component } from 'react'
-import { Table, Select } from 'antd';
+import { Table } from 'antd';
 import { useSubstrateState } from '../../substrate-lib'
 import { web3FromSource } from '@polkadot/extension-dapp'
 import Action from './Action'
 import Query from './Query'
 import {FileDoneOutlined} from '@ant-design/icons'
-const { Option } = Select;
+// const { Option } = Select;
 
 export default class Confirm extends Component {
   constructor(props) {
@@ -51,7 +51,7 @@ export default class Confirm extends Component {
         { title: '服务内容', dataIndex: 'serviceContent', key: 'serviceContent' }
       ],
       isOn: false,
-      commNow: '',
+      commNow: this.props.commNow,
       data: [{id: 0, name: '张三', chainAddress: '5xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxrxxxx', 
       hours: 'x', commName: 'xx社区', serviceContent: '志愿服务', date: '20xx-xx-xx'}],
 
@@ -59,10 +59,10 @@ export default class Confirm extends Component {
     };
   }
 //render: (text, record, index)=>`${index+1}` 
-  handleChange = (value) => {
-    console.log(`selected ${value}`);
-    this.setState({commNow: value})
-  };
+  // handleChange = (value) => {
+  //   console.log(`selected ${value}`);
+  //   this.setState({commNow: value})
+  // };
   changeColumns = () => {
     this.setState({columns: this.state.column2})
   }
@@ -93,8 +93,8 @@ export default class Confirm extends Component {
     return (
       <div style={{width: '100%', padding: 20, borderRadius: 10, border: 1, opacity: 0.9, background: '#fff'}}>
         <h2 style={{color:'#3897e1'}}><FileDoneOutlined style={{marginRight: 5}}/>
-        志愿记录认证
-        <Select
+        志愿认证
+        {/* <Select
         placeholder='请选择社区'
         style={{ width: 120, marginLeft: 20 }}
         onChange={this.handleChange}
@@ -102,9 +102,9 @@ export default class Confirm extends Component {
         {this.props.comm.map(comm => (
           <Option key={comm} value={comm}>{comm}</Option>
         ))}
-      </Select>
+      </Select> */}
         <Query changeColumns={this.changeColumns} changeBack={this.changeBack} 
-        commNow={this.state.commNow} getData={this.getData} style={{marginLeft: 20, color: '#3897e1', borderColor:'#3897e1'}} />
+        commNow={this.props.commNow} getData={this.getData} style={{marginLeft: 20, color: '#3897e1', borderColor:'#3897e1'}} />
         </h2>
       <Table
       rowKey="id"

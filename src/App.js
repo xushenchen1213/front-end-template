@@ -45,8 +45,11 @@ const sectionStyle = {
 function User() {
   const [comm, setComm] = useState([])
   const getComm = (tableData) => {
-
     setComm(tableData)
+  }
+  const [commNow, setCommNow] = useState('')
+  const getCommNow = (commNow) => {
+    setCommNow(commNow)
   }
   const { apiState, apiError, keyringState } = useSubstrateState()
 
@@ -93,23 +96,23 @@ function User() {
             <BlockNumber />
           </Grid.Row>
           <Grid.Row stretched>
-            <Balances getComm={getComm} />
+            <Balances getComm={getComm} getcommNow={getCommNow} />
           </Grid.Row>
           <Grid.Row style={{ paddingTop: 0}}>
             <Grid.Column style={{ paddingLeft: 0, margin: 0 }}>
               <div style={{ padding: 25, border: 1, borderRadius: 10, background: '#fff', opacity: 0.9 }}>
-                <ApplyForCreatCoin comm={comm} />
+                <ApplyForCreatCoin comm={comm} commNow={commNow} />
               </div>
             </Grid.Column>
             <Grid.Column stretched style={{ paddingRight: 0, margin: 0 }}>
               <div style={{ border: 1, borderRadius: 10, padding: 25, opacity: 0.9, background: '#fff' }}>
                 <Transfer />
-                <TransferCommunityCoin comm={comm} />
+                <TransferCommunityCoin comm={comm} commNow={commNow} />
               </div>
             </Grid.Column>
           </Grid.Row>
           <Grid.Row style={{ paddingTop: 0}} stretched>
-            <ConfirmForStudents comm={comm} style={{ marginLeft: 30 }} />
+            <ConfirmForStudents  commNow={commNow} comm={comm} style={{ marginLeft: 30 }} />
           </Grid.Row>
         </Grid>
       </Container>
@@ -122,10 +125,10 @@ function User() {
 //管理员界面
 function Admin() {
   const [comm, setComm] = useState([])
-  const [commNow, setCommNow] = useState('')
   const getComm = (tableData) => {
     setComm(tableData)
   }
+  const [commNow, setCommNow] = useState('')
   const getCommNow = (commNow) => {
     setCommNow(commNow)
   }
@@ -165,7 +168,7 @@ function Admin() {
   return (
     <div style={sectionStyle} ref={contextRef}>
       <Sticky style={{ background: "#fff" }} context={contextRef}>
-        <AccountSelector />
+        <AccountSelector getComm={getComm} getcommNow={getCommNow} />
       </Sticky>
       <Container style={{ marginTop: 30 }}>
         <Grid stackable columns="equal">
@@ -180,7 +183,7 @@ function Admin() {
           </Grid.Row>
           <Grid.Row style={{ padding: 25, border: 1, borderRadius: 10, background: '#fff', opacity: 0.9 }}>
             <Transfer />
-            <TransferCommunityCoin comm={comm} />
+            <TransferCommunityCoin comm={comm} commNow={commNow} />
           </Grid.Row>
           <Grid.Row>
             <Grid.Column style={{ paddingLeft: 0 }}>
@@ -190,7 +193,7 @@ function Admin() {
             </Grid.Column>
             <Grid.Column style={{ paddingRight: 0 }} stretched>
               <div style={{ padding: 25, border: 1, borderRadius: 10, background: '#fff', opacity: 0.9 }}>
-                <Community comm={comm} />
+                <Community comm={comm} commNow={commNow} />
                 <ChangeAddress comm={comm} commNow={commNow} />
               </div>
             </Grid.Column>

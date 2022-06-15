@@ -53,7 +53,6 @@ function Main(props) {
 
   const onChange = addr => {
     setCurrentAccount(keyring.getPair(addr))
-    console.log(currentAccount);
   }
 
   return (

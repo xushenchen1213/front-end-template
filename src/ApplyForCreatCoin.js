@@ -3,8 +3,8 @@ import { Form, Input, Button, InputNumber, DatePicker } from 'antd';
 import axios from 'axios'
 import moment from 'moment'
 import { DeliveredProcedureOutlined } from '@ant-design/icons'
-import { Select } from 'antd';
-const { Option } = Select;
+// import { Select } from 'antd';
+// const { Option } = Select;
 //提交志愿申请记录的表单
 //提交志愿申请记录的表单
 export default function ApplyForCreatCoin(props) {
@@ -25,22 +25,22 @@ export default function ApplyForCreatCoin(props) {
 
   const [form] = Form.useForm();
   const [status, setStatus] = useState()
-  const [commNow, setCommNow] = useState()
+  // const [commNow, setCommNow] = useState()
 
-  const onFinish = async (values) => {
+  const onFinish = (values) => {
     axios({
-      method: 'get',
-      url: 'https://db.timecoin.tech:21511/api/creatCoins',
+      url: 'https://db.timecoin.tech:21511/api/creatCoins', 
       params: {
         name: values.name,
         chainAddress: values.chainAddress,
-        commName: commNow,
+        commName: props.commNow,
         hours: values.hours,
         date: values.date._d,
         serviceContent: values.serviceContent
       }
-    })
+      })
       .then(response => {
+        console.log(response);
         if (response.data.status === 0) {
           setStatus('😉 提交成功')
         }
@@ -54,10 +54,10 @@ export default function ApplyForCreatCoin(props) {
     form.resetFields();
     setStatus('')
   };
-  const handleChange = (value) => {
-    console.log(`selected ${value}`);
-    setCommNow(value)
-  };
+  // const handleChange = (value) => {
+  //   console.log(`selected ${value}`);
+  //   setCommNow(value)
+  // };
   function onChange(date, dateString) {
     console.log(date, dateString);
   }
@@ -69,11 +69,26 @@ export default function ApplyForCreatCoin(props) {
   }
 
   return (
-    <div style={{width: '100%'}}>
+    <div style={{ width: '100%' }}>
       <h2 style={{ color: '#3897e1' }}><DeliveredProcedureOutlined style={{ marginRight: 5, marginBottom: 10 }} />志愿服务记录提交</h2>
-      <Form style={{width: '100%'}} {...layout} form={form} name="control-hooks" onFinish={onFinish}>
+      <Form style={{ marginLeft: 20, width: '100%' }} {...layout} form={form} name="control-hooks" onFinish={onFinish}>
+      <Form.Item
+          style={{ width: '100%' }}
+          name="commNow"
+          label="服务社区"
+          labelCol={{ span: 4 }}
+          rules={[
+            {
+              required: false,
+              message: '请填写服务社区'
+            },
+          ]}
+        >
+          <Input
+            maxLength={24} placeholder={props.commNow} value={props.commNow} disabled></Input>
+        </Form.Item>        
         <Form.Item
-          style={{width: '100%'}}
+          style={{ width: '100%' }}
           name="name"
           label="姓名"
           labelCol={{ span: 4 }}
@@ -84,9 +99,9 @@ export default function ApplyForCreatCoin(props) {
             },
           ]}
         >
-          <Input 
-          style={{width: '100%'}}
-          maxLength={10} />
+          <Input
+            style={{ width: '100%' }}
+            maxLength={10} />
         </Form.Item>
         <Form.Item
           name="chainAddress"
@@ -100,7 +115,7 @@ export default function ApplyForCreatCoin(props) {
           ]}
         >
           <Input
-            style={{width: '100%'}}
+            style={{ width: '100%' }}
             maxLength={48} />
         </Form.Item>
         <Form.Item
@@ -115,7 +130,7 @@ export default function ApplyForCreatCoin(props) {
           ]}
         >
           <InputNumber
-            style={{width: '100%'}}
+            style={{ width: '100%' }}
             addonAfter="小时"
             min="0"
             max="24"
@@ -135,10 +150,10 @@ export default function ApplyForCreatCoin(props) {
             },
           ]}
         >
-          <DatePicker onChange={onChange} disabledDate={onDisabledDate} style={{width: '100%'}} />
+          <DatePicker onChange={onChange} disabledDate={onDisabledDate} style={{ width: '100%' }} />
 
         </Form.Item>
-        <Form.Item
+        {/* <Form.Item
           name="commName"
           label="服务社区"
           labelCol={{ span: 4 }}
@@ -157,9 +172,10 @@ export default function ApplyForCreatCoin(props) {
               <Option state='commNow' key={comm} value={comm}>{comm}</Option>
             ))}
           </Select>
-        </Form.Item>
+        </Form.Item> */}
+
         <Form.Item
-          style={{width: '100%'}}
+          style={{ width: '100%' }}
           name="serviceContent"
           label="服务内容"
           labelCol={{ span: 4 }}
@@ -173,21 +189,7 @@ export default function ApplyForCreatCoin(props) {
           <Input
             maxLength={24} />
         </Form.Item>
-        {/* <Form.Item
-          style={{width: '100%'}}
-          name="serviceContent"
-          label="现在社区"
-          labelCol={{ span: 4 }}
-          rules={[
-            {
-              required: true,
-              message: '请填写服务内容'
-            },
-          ]}
-        >
-          <Input
-            maxLength={24} value='1' disabled/>
-        </Form.Item> */}
+
 
         <Form.Item style={{ align: 'center', marginBottom: 0 }} {...tailLayout}>
           <Button type="primary" htmlType="submit">

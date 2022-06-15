@@ -7,8 +7,8 @@ import { web3FromSource } from '@polkadot/extension-dapp'
 import { ContractPromise } from '@polkadot/api-contract'
 import { MoneyCollectOutlined } from '@ant-design/icons'
 // import url from './config/ReadUrl'
-import { Select } from 'antd';
-const { Option } = Select;
+// import { Select } from 'antd';
+// const { Option } = Select;
 //转社区币界面
 //转社区币界面
 //转社区币界面
@@ -57,21 +57,21 @@ export default function Main(props) {
     const fromAcct = await getFromAcct()
     axios({
       method: 'get',
-      url: 'https://db.timecoin.tech:21511/api/getCommNow',
+      url: 'https://db.timecoin.tech:21511/api/transferCommCoins',
       params: {
-        address: fromAcct[0],
-        commNow: formState.commNow
+        commNow: props.commNow
       }
     })
       .then(response => {
+        console.log(props.commNow);
         console.log(response);
         const value = 0;
         const gasLimit = 30000n * 1000000n;
-        const contract = new ContractPromise(api, response.data.abi, response.data.commAddress);
+        const abi = response.data.abi
+        const commAddress = response.data.commAddress
+        const contract = new ContractPromise(api, abi, commAddress);
         const toAmount = addressTo;
         const balance = amount * 1000000000000
-        console.log(balance);
-        console.log(toAmount);
         contract.tx
           .transfer({ value, gasLimit }, toAmount, balance)
           .signAndSend(...fromAcct, (result) => {
@@ -117,7 +117,7 @@ export default function Main(props) {
           />
         </Form.Field>
         <Form.Field style={{ marginBottom: 0, textAlign: 'center' }}>
-        <Select
+        {/* <Select
           placeholder='请选择社区'
           style={{ width: 120, marginRight: 20 }}
           onChange={onChange}
@@ -125,7 +125,7 @@ export default function Main(props) {
           {props.comm.map(comm => (
             <Option state='commNow' key={comm} value={comm}>{comm}</Option>
           ))}
-        </Select>
+        </Select> */}
         <Button style={{ borderColor: '#2185d0', color: '#2185d0', background: 'white', margin: 0, paddingTop: 4 }}
             disabled={amount === 0 || addressTo === '' ? true : false} onClick={onTransfer}>确认</Button>
         </Form.Field>

@@ -34,9 +34,9 @@ function Main(props) {
             value={transactionNum? transactionNum: '0'}
           />
         </Card.Content>
-        <Card.Content extra>
+        <Card.Content style={{textAlign: 'center'}} extra>
           {/* <Icon name="time" /> {blockNumberTimer} */}
-          TOTALNUMBER OF TRANSACTIONS
+          NUMBER OF TRANSACTIONS
         </Card.Content>
       </Card>
     </Grid.Column>

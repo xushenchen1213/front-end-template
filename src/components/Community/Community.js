@@ -1,6 +1,6 @@
 
 import React, { useState } from 'react';
-import { Button, message, Select } from 'antd';
+import { Button, message } from 'antd';
 import * as XLSX from 'xlsx';
 import styles from './community.less';
 import axios from 'axios'
@@ -9,7 +9,7 @@ import { web3FromSource } from '@polkadot/extension-dapp'
 import { ContractPromise } from '@polkadot/api-contract'
 import { useSubstrateState } from '../../substrate-lib'
 import { CommentOutlined } from '@ant-design/icons'
-const { Option } = Select;
+// const { Option } = Select;
 
 
 
@@ -20,7 +20,7 @@ export default function Comm(props) {
   const [isNotGood, setIsNotGood] = useState(true)
   const [notGood, setNotGood] = useState(false)
   const [checkStatus, setCheckStatus] = useState('')
-  const [commNow, setCommNow] = useState('')
+  // const [commNow, setCommNow] = useState('')
   const [newRegisterStatus, setNewRegisterStatus] = useState('')
 
   const getFromAcct = async () => {
@@ -40,6 +40,8 @@ export default function Comm(props) {
 
 
   const onImportExcel = file => {
+    setCheckStatus('')
+    setNewRegisterStatus('')
     setNotGood(false)
     // 获取上传的文件对象
     const { files } = file.target;
@@ -82,9 +84,6 @@ export default function Comm(props) {
     let repeat = false;
     for (var i = 0; i < commList.length; i++) {
       const chainAddress = '账号'
-      const commId = '社区编号'
-      console.log(commList[i][chainAddress]);
-      console.log(commList[i][commId]);
       if (address.indexOf(commList[i][chainAddress]) !== -1) {
         alert('文件及内容不合规范')
         repeat = true
@@ -106,7 +105,7 @@ export default function Comm(props) {
           url: 'https://db.timecoin.tech:21511/api/checkUser',
           params: {
             address: commList[i][chainAddress],
-            commNow: commNow
+            commNow: props.commNow
           }
         })
           .then(response => {
@@ -135,14 +134,18 @@ export default function Comm(props) {
       method: 'get',
       url: 'https://db.timecoin.tech:21511/api/getCommNow',
       params: {
-        commNow: commNow
+        commNow: props.commNow,
+        fromAcct: fromAcct[0]
       }
     })
       .then(response => {
         //register into community
         const value = 0;
         const gasLimit = 30000n * 1000000n;
-        const contract = new ContractPromise(api, response.data.abi, response.data.commAddress);
+        const abi = response.data.abi
+        const commAddress = response.data.commAddress
+        const departName = response.data.departName
+        const contract = new ContractPromise(api, abi, commAddress);
         contract.tx
           .enrollVolunteers({ value, gasLimit }, volunList)
           .signAndSend(...fromAcct, (result) => {
@@ -150,43 +153,47 @@ export default function Comm(props) {
             if (result.contractEvents) {
               setNewRegisterStatus('😉 加入成功！')
               commList.forEach((item) => {
+                const name = '姓名'
                 const chainAddress = '账号'
                 const commId = '社区编号'
                 axios({
                   method: 'get',
                   url: 'https://db.timecoin.tech:21511/api/submitUser',
                   params: {
-                    chainAddress: item[chainAddress],
+                    name: item[name],
                     commId: item[commId],
+                    chainAddress: item[chainAddress],
                     commName1: response.data.commName1,
-                    commName2: commNow
+                    commName2: props.commNow,
+                    departName: departName
                   }
                 })
               })
             }
             if (result.dispatchError) {
+              console.log(result.dispatchError.toHuman());
               setNewRegisterStatus('😞 加入失败！')
             }
           });
       })
   }
-  const handleChange = (value) => {
-    console.log(`selected ${value}`);
-    setCommNow(value)
-  };
+  // const handleChange = (value) => {
+  //   console.log(`selected ${value}`);
+  //   setCommNow(value)
+  // };
 
   return (
-    <div style={{ height: 165 }}>
+    <div style={{ height: 165}}>
       <h2 style={{ color: '#3897e1' }}><CommentOutlined style={{ marginRight: 5, marginBottom: 10 }} />社区注册</h2>
-      <Button style={{ width: '100%', height: 32, backgroundColor: 'white', border: '1' }}>
+      <Button style={{ marginLeft: 20, width: '83%', height: 40, backgroundColor: 'white', border: '1'}}>
         <input style={{ width: '100%' }} type='file' accept='.xlsm, .xlsx, .xls' onChange={onImportExcel} />
       </Button>
-      <p style={{ marginTop: 15, fontSize: 14 }} className={styles['upload-tip']}>
-        支持 .xls  .xlsx  .xlsm 格式的文件
-        <span>{checkStatus}{newRegisterStatus}</span>
+      <p style={{ marginLeft: 20, marginTop: 15, fontSize: 14 }} className={styles['upload-tip']}>
+        当前社区为: {props.commNow}
+        <span> {checkStatus} {newRegisterStatus}</span>
       </p>
       <span style={{ display: 'flex', justifyContent: 'center', align: 'center'}}>
-        <Select
+        {/* <Select
           placeholder='请选择社区'
           style={{ width: 110}}
           onChange={handleChange}
@@ -194,9 +201,9 @@ export default function Comm(props) {
           {props.comm.map(comm => (
             <Option key={comm} value={comm}>{comm}</Option>
           ))}
-        </Select>
+        </Select> */}
 
-        <Button style={{marginLeft:15}} type="primary" onClick={onCheck}>查验</Button>
+        <Button type="primary" onClick={onCheck}>查验</Button>
         <Button disabled={isNotGood} onClick={onSubmit}>注册</Button>
       </span>
     </div >

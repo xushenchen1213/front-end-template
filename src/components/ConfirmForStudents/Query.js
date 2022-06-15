@@ -26,6 +26,7 @@ export default function Query(props) {
   }
 
   const query = async () => {
+    console.log(props.commNow);
     props.changeBack()
     const fromAcct = await getFromAcct()
     if (props.commNow) {

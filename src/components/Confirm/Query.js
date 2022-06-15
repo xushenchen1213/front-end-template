@@ -27,6 +27,7 @@ export default function Query(props) {
 
   const query = async () => {
     props.changeBack()
+    props.getStatus('')
     const fromAcct = await getFromAcct()
     if (props.commNow) {
       axios({
@@ -44,6 +45,10 @@ export default function Query(props) {
           if (response.data.status === 1) {
             props.getData(data)
             alert('您未有相关申请记录')
+          }
+          if (response.data.status === 2) {
+            props.getData(data)
+            // alert('您未有相关权限')
           }
         })
     }
@@ -69,6 +74,9 @@ export default function Query(props) {
             props.getData(data)
             alert('您未有相关申请记录')
           }
+          if (response.data.status === 2) {
+            props.getData(data)
+          }
         })
     }
   }
@@ -85,14 +93,15 @@ export default function Query(props) {
         }
       })
         .then(response => {
-          console.log(typeof (response));
-          console.log(response);
           if (response.data.status === 0) {
             props.getData(response.data.result)
           }
           if (response.data.status === 1) {
             props.getData(data)
             alert('您未有相关申请记录')
+          }
+          if (response.data.status === 2) {
+            props.getData(data)
           }
         })
     }

@@ -8,8 +8,8 @@ import { web3FromSource } from '@polkadot/extension-dapp'
 
 export default function Query(props) {
   const data = [{
-    id: 0, chainAddress: '5xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxrxxxx',
-    commName: 'xx社区', volunTime: 'x'
+    commId: 0, name: 'xxx', chainAddress: '5xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxrxxxx', 
+    commName: 'xx社区', departName:'xxx', volunTime: 'x'
   }]
   const [volunTimeList, setVolunTimeList] = useState([])
 
@@ -32,18 +32,18 @@ export default function Query(props) {
       method: 'get',
       url: 'https://db.timecoin.tech:21511/api/getMembersInfo',
       params: {
-        admin: fromAcct[0]
+        admin: fromAcct[0],
+        commNow: props.commNow
       }
     })
       .then(response => {
-        console.log(response);
         if (response.data.status === 0) {
           props.getData(response.data.volunTimeList)
           setVolunTimeList(response.data.volunTimeList)
         }
         if (response.data.status === 1) {
           props.getData(data)
-          alert('您未有相关申请记录')
+          alert('未有相关成员记录')
         }
       })
 
@@ -52,17 +52,17 @@ export default function Query(props) {
     // 获取sheet对象，设置当前sheet的样式
     // showGridLines: false 表示不显示表格边框
     let workbook = new ExcelJs.Workbook();
-    let sheetName = "Allen_test.xlsx";
+    let sheetName = "志愿时长表.xlsx";
     let sheet = workbook.addWorksheet(sheetName, {
       views: [{ showGridLines: true }]
     });
     // 每一个sheet对象对应一个Excel文件中的表，如果你想子一个Excel中显示多个表，可以定义多个sheet
-    let columnArr = [];
-    for (let i in volunTimeList[0]) {
-      let tempObj = { name: "" };
-      tempObj.name = i;
-      columnArr.push(tempObj);
-    }
+    let columnArr = [{ name: "ID" }, { name: "姓名" }, { name: "账号(公钥)" }, { name: "所在社区" }, { name: "所在部门" }, { name: "志愿时长" }];
+    // for (let i in volunTimeList[0]) {
+    //   let tempObj = { name: "" };
+    //   tempObj.name = i;
+    //   columnArr.push(tempObj);
+    // }
     // 设置表格的主要数据部分
     let headerName = "RequestsList";
     sheet.addTable({
@@ -89,15 +89,19 @@ export default function Query(props) {
 
     // 设置每一列的宽度
     sheet.columns = sheet.columns.map((e) => {
-      const expr = e.values[5];
+      const expr = e.values[6];
       switch (expr) {
-        case "id":
+        case "ID":
           return { width: 20 };
-        case "chainAddress":
+        case "姓名":
+          return { width: 20 };
+        case "账号(公钥)":
           return { width: 50 };
-        case "commName":
+        case "所在社区":
           return { width: 20 };
-        case "volunTime":
+        case "所在部门":
+          return { width: 20 };
+        case "志愿时长":
           return { width: 20 };
         default:
           return { width: 20 };
@@ -117,7 +121,7 @@ export default function Query(props) {
 
       // 获取表格数据部分，定义其样式
       for (let j = 0; j < table.table.rows.length; j++) {
-        let rowCell = sheet.getCell(`${String.fromCharCode(65 + i)}${j+2}`);
+        let rowCell = sheet.getCell(`${String.fromCharCode(65 + i)}${j + 2}`);
         rowCell.alignment = { wrapText: true, vertical: 'middle', horizontal: 'center' };
         rowCell.border = {
           bottom: {
@@ -148,8 +152,8 @@ export default function Query(props) {
 
   return (
     <span>
-      <Button style={{ marginLeft: 20, color: '#3897e1', borderColor: '#3897e1' }} onClick={query}>查询社区成员志愿时长</Button>
-      <Button style={{ marginLeft: 20, color: '#3897e1', borderColor: '#3897e1' }} onClick={exportExcel}>导出志愿时长表</Button>
+      <Button style={{ marginLeft: 20, color: '#3897e1', borderColor: '#3897e1' }} onClick={query}>查询</Button>
+      <Button style={{ marginLeft: 20, color: '#3897e1', borderColor: '#3897e1' }} onClick={exportExcel}>导出</Button>
     </span>
   )
 }

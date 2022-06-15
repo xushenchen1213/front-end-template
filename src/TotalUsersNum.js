@@ -17,7 +17,6 @@ function Main(props) {
       })
       .then(res =>{
         const count = 'count(distinct chainAddress)'
-        // const count = 'count(distinct chain_address)'
         const number = res.data.result[count]
         setNumOfUsers(number)
         resolve()

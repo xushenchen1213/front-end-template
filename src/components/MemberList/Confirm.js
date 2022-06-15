@@ -11,16 +11,18 @@ export default class Confirm extends Component {
     super(props);
     this.state = {
       columns: [
-        { title: '编号', dataIndex: 'commId', key: 'commId'},
+        { title: 'ID', dataIndex: 'commId', key: 'commId'},
+        { title: '姓名', dataIndex: 'name', key: 'name'},
         { title: '公钥', dataIndex: 'chainAddress', key: 'chainAddress' },
         { title: '社区', dataIndex: 'commName', key: 'commName' },
+        { title: '部门', dataIndex: 'departName', key: 'departName' },
         { title: '志愿时长', dataIndex: 'volunTime', key: 'volunTime' }
       ],
       isOn: false,
       commNow: '',
       data: [{
-        commId: 0, chainAddress: '5xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxrxxxx', 
-        commName: 'xx社区', volunTime: 'x'
+        commId: 0, name: 'xxx', chainAddress: '5xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxrxxxx', 
+        commName: 'xx社区', departName:'xxx', volunTime: 'x'
       }],
     };
   }
@@ -54,9 +56,9 @@ export default class Confirm extends Component {
     return (
       <div style={{width: '100%', padding: 20, borderRadius: 10, border: 1, opacity: 0.9, background: '#fff'}}>
         <h2 style={{color:'#3897e1'}}><FileDoneOutlined style={{marginRight: 5}}/>
-        志愿记录认证
+        志愿时长
         <Query changeColumns={this.changeColumns} changeBack={this.changeBack} 
-        commNow={this.state.commNow} getData={this.getData} style={{marginLeft: 20, color: '#3897e1', borderColor:'#3897e1'}} />
+        commNow={this.props.commNow} getData={this.getData} style={{marginLeft: 20, color: '#3897e1', borderColor:'#3897e1'}} />
         </h2>
       <Table
       rowKey="chainAddress"
