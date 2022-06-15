@@ -200,7 +200,6 @@ export default function Main(props) {
             commName = response.data.commName : commName = '/'
           setCommNow(commName)
           props.getcommNow(commName)
-          props.getcommNow(commName)
           if (response.data.status === 1) {
             addresses.map(async (address, index) => {
               isSame[address] = '/'
