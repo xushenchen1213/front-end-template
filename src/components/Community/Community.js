@@ -8,7 +8,7 @@ import axios from 'axios'
 import { web3FromSource } from '@polkadot/extension-dapp'
 import { ContractPromise } from '@polkadot/api-contract'
 import { useSubstrateState } from '../../substrate-lib'
-import { CommentOutlined } from '@ant-design/icons'
+import { CommentOutlined, CloseSquareOutlined } from '@ant-design/icons'
 // const { Option } = Select;
 
 
@@ -45,6 +45,7 @@ export default function Comm(props) {
     setNotGood(false)
     // 获取上传的文件对象
     const { files } = file.target;
+    console.log(files);
     // 通过FileReader对象读取文件
     const fileReader = new FileReader();
     var that;
@@ -68,6 +69,7 @@ export default function Comm(props) {
         message.success('上传成功！')
 
         setCommList(that)
+        console.log(that);
 
       } catch (e) {
         // 这里可以抛出文件类型错误不正确的相关提示
@@ -177,22 +179,30 @@ export default function Comm(props) {
           });
       })
   }
+  const clear = () => {
+    var obj = document.getElementById("file1") ; 
+    obj.value = null
+    setCheckStatus('')
+    setNewRegisterStatus('')
+    setNotGood(false)
+  }
   // const handleChange = (value) => {
   //   console.log(`selected ${value}`);
   //   setCommNow(value)
   // };
 
   return (
-    <div style={{ height: 165}}>
+    <div style={{ height: 165 }}>
       <h2 style={{ color: '#3897e1' }}><CommentOutlined style={{ marginRight: 5, marginBottom: 10 }} />社区注册</h2>
-      <Button style={{ marginLeft: 20, width: '83%', height: 40, backgroundColor: 'white', border: '1'}}>
-        <input style={{ width: '100%' }} type='file' accept='.xlsm, .xlsx, .xls' onChange={onImportExcel} />
+      <Button style={{ marginLeft: 20, width: '83%', height: 40, backgroundColor: 'white', border: '1' }}>
+        <input style={{ width: '80%' }} id='file1' type='file' accept='.xlsm, .xlsx, .xls' onChange={onImportExcel} />
+        <span onClick={clear} >清空文件<CloseSquareOutlined style={{marginRight: 10}}/> </span>
       </Button>
       <p style={{ marginLeft: 20, marginTop: 15, fontSize: 14 }} className={styles['upload-tip']}>
         当前社区为: {props.commNow}
         <span> {checkStatus} {newRegisterStatus}</span>
       </p>
-      <span style={{ display: 'flex', justifyContent: 'center', align: 'center'}}>
+      <span style={{ display: 'flex', justifyContent: 'center', align: 'center' }}>
         {/* <Select
           placeholder='请选择社区'
           style={{ width: 110}}
