@@ -3,10 +3,8 @@ import { Table } from 'antd';
 import { useSubstrateState } from '../../substrate-lib'
 import { web3FromSource } from '@polkadot/extension-dapp'
 import Action from './Action'
-// import Status from './Status'
 import Query from './Query'
 import {FileDoneOutlined} from '@ant-design/icons'
-// const { Option } = Select;
 
 export default class Confirm extends Component {
   constructor(props) {
@@ -26,13 +24,7 @@ export default class Confirm extends Component {
           dataIndex: '',
           key: 'x',
           render: (record) => <Action getStatus={this.getStatus} commNow={this.props.commNow} isOn={this.state.isOn} record={record} data={this.state.data}/>
-        },
-        // {
-        //   title: '确认',
-        //   dataIndex: '',
-        //   key: 'x',
-        //   render: (record) => <Status status={this.state.status} commNow={this.props.commNow} isOn={this.state.isOn} record={record} data={this.state.data}/>
-        // }
+        }
       ],
       column1: [
         { title: '编号', dataIndex: 'id', key: 'id'},
@@ -48,13 +40,7 @@ export default class Confirm extends Component {
           dataIndex: '',
           key: 'x',
           render: (record) => <Action getStatus={this.getStatus} commNow={this.props.commNow} isOn={this.state.isOn} record={record} data={this.state.data}/>
-        },
-        // {
-        //   title: '确认',
-        //   dataIndex: '',
-        //   key: 'x',
-        //   render: (record) => <Status status={this.state.status} commNow={this.props.commNow} isOn={this.state.isOn} record={record} data={this.state.data}/>
-        // }
+        }
       ],
       column2: [
         { title: '编号', dataIndex: 'id', key: 'id'},
@@ -74,11 +60,6 @@ export default class Confirm extends Component {
 
     };
   }
-//render: (text, record, index)=>`${index+1}` 
-  // handleChange = (value) => {
-  //   console.log(`selected ${value}`);
-  //   this.setState({commNow: value})
-  // };
 
   getStatus = (data) => {
     this.setState({status: data})
@@ -113,15 +94,6 @@ export default class Confirm extends Component {
       <div style={{padding: 20, borderRadius: 10, border: 1, opacity: 0.9, background: '#fff'}}>
         <h2 style={{color:'#3897e1'}}><FileDoneOutlined style={{marginRight: 5}}/>
         志愿认证
-        {/* <Select
-        placeholder='请选择社区'
-        style={{ width: 110, marginLeft: 20 }}
-        onChange={this.handleChange}
-      >
-        {this.props.comm.map(comm => (
-          <Option key={comm} value={comm}>{comm}</Option>
-        ))}
-      </Select> */}
         <Query getStatus={this.getStatus} changeColumns={this.changeColumns} changeBack={this.changeBack} 
         commNow={this.props.commNow} getData={this.getData} style={{marginLeft: 20, color: '#3897e1', borderColor:'#3897e1'}} />
         </h2>

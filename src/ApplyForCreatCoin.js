@@ -1,11 +1,10 @@
 import React, { useState } from 'react'
 import { Form, Input, Button, InputNumber, DatePicker } from 'antd';
 import axios from 'axios'
+import qs from 'qs'
 import moment from 'moment'
 import { DeliveredProcedureOutlined } from '@ant-design/icons'
-// import { Select } from 'antd';
-// const { Option } = Select;
-//提交志愿申请记录的表单
+
 //提交志愿申请记录的表单
 export default function ApplyForCreatCoin(props) {
   const layout = {
@@ -28,18 +27,22 @@ export default function ApplyForCreatCoin(props) {
   // const [commNow, setCommNow] = useState()
 
   const onFinish = (values) => {
+    const form = {
+      name: values.name,
+      chainAddress: values.chainAddress,
+      commName: props.commNow,
+      hours: values.hours,
+      date: moment(values.date).format('YYYY-MM-DD'),
+      serviceContent: values.serviceContent
+    }
     axios({
+      method: 'post',
       url: 'https://db.timecoin.tech:21511/api/creatCoins', 
-      params: {
-        name: values.name,
-        chainAddress: values.chainAddress,
-        commName: props.commNow,
-        hours: values.hours,
-        date: values.date._d,
-        serviceContent: values.serviceContent
-      }
+      data: qs.stringify(form),
+      header: { 'content-type': 'application/x-www-form-urlencoded; charset=utf-8' }
       })
       .then(response => {
+        console.log(form);
         console.log(response);
         if (response.data.status === 0) {
           setStatus('😉 提交成功')
@@ -54,12 +57,11 @@ export default function ApplyForCreatCoin(props) {
     form.resetFields();
     setStatus('')
   };
-  // const handleChange = (value) => {
-  //   console.log(`selected ${value}`);
-  //   setCommNow(value)
-  // };
+
   function onChange(date, dateString) {
     console.log(date, dateString);
+    const test = moment(date).format('YYYY-MM-DD')
+    console.log(test);
   }
   function onChangeNum(value) {
     console.log('changed', value);
@@ -151,29 +153,7 @@ export default function ApplyForCreatCoin(props) {
           ]}
         >
           <DatePicker onChange={onChange} disabledDate={onDisabledDate} style={{ width: '100%' }} />
-
         </Form.Item>
-        {/* <Form.Item
-          name="commName"
-          label="服务社区"
-          labelCol={{ span: 4 }}
-          rules={[
-            {
-              required: true,
-            },
-          ]}
-        >
-          <Select
-            placeholder='请选择社区'
-            style={{width: '100%'}}
-            onChange={handleChange}
-          >
-            {props.comm.map(comm => (
-              <Option state='commNow' key={comm} value={comm}>{comm}</Option>
-            ))}
-          </Select>
-        </Form.Item> */}
-
         <Form.Item
           style={{ width: '100%' }}
           name="serviceContent"

@@ -4,14 +4,11 @@ import { Button, message } from 'antd';
 import * as XLSX from 'xlsx';
 import styles from './community.less';
 import axios from 'axios'
-// import url from '../../config/ReadUrl'
 import { web3FromSource } from '@polkadot/extension-dapp'
 import { ContractPromise } from '@polkadot/api-contract'
 import { useSubstrateState } from '../../substrate-lib'
 import { CommentOutlined, CloseSquareOutlined } from '@ant-design/icons'
 // const { Option } = Select;
-
-
 
 export default function Comm(props) {
   const { api, currentAccount } = useSubstrateState()
@@ -20,7 +17,6 @@ export default function Comm(props) {
   const [isNotGood, setIsNotGood] = useState(true)
   const [notGood, setNotGood] = useState(false)
   const [checkStatus, setCheckStatus] = useState('')
-  // const [commNow, setCommNow] = useState('')
   const [newRegisterStatus, setNewRegisterStatus] = useState('')
 
   const getFromAcct = async () => {
@@ -141,9 +137,10 @@ export default function Comm(props) {
       }
     })
       .then(response => {
+        console.log(response);
         //register into community
         const value = 0;
-        const gasLimit = 30000n * 1000000n;
+        const gasLimit = 30000n * 10000000n;
         const abi = response.data.abi
         const commAddress = response.data.commAddress
         const departName = response.data.departName
@@ -157,7 +154,7 @@ export default function Comm(props) {
               commList.forEach((item) => {
                 const name = '姓名'
                 const chainAddress = '账号'
-                const commId = '社区编号'
+                const commId = '社区成员编号'
                 axios({
                   method: 'get',
                   url: 'https://db.timecoin.tech:21511/api/submitUser',
@@ -193,7 +190,7 @@ export default function Comm(props) {
 
   return (
     <div style={{ height: 165 }}>
-      <h2 style={{ color: '#3897e1' }}><CommentOutlined style={{ marginRight: 5, marginBottom: 10 }} />社区注册</h2>
+      <h2 style={{ color: '#3897e1' }}><CommentOutlined style={{ marginRight: 5, marginBottom: 10 }} />社区成员注册</h2>
       <Button style={{ marginLeft: 20, width: '83%', height: 40, backgroundColor: 'white', border: '1' }}>
         <input style={{ width: '80%' }} id='file1' type='file' accept='.xlsm, .xlsx, .xls' onChange={onImportExcel} />
         <span onClick={clear} >清空文件<CloseSquareOutlined style={{marginRight: 10}}/> </span>

@@ -1,5 +1,4 @@
 import React from 'react'
-// import url from '../../config/ReadUrl'
 import { Button } from 'antd';
 import axios from 'axios'
 import { useSubstrateState } from '../../substrate-lib'
@@ -48,7 +47,6 @@ export default function Query(props) {
           }
           if (response.data.status === 2) {
             props.getData(data)
-            // alert('您未有相关权限')
           }
         })
     }

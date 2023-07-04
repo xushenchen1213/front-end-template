@@ -155,8 +155,6 @@ export default function Main(props) {
           data.results.map(account => commN.push(account.commName2))
           setCommName2(unique(commN));
           props.getComm(unique(commN))
-          
-          // props.getcommNow(unique(commN))
         }
         if (addresses.length - 1 === index) {
           resolve()
@@ -187,7 +185,6 @@ export default function Main(props) {
 
     new Promise((resolve) => {
       const addresses = keyring.getPairs().map(account => account.address)
-
       axios({
         method: 'get',
         url: 'https://db.timecoin.tech:21511/api/getCommunity',
@@ -257,6 +254,7 @@ export default function Main(props) {
 
     })
   }
+
 
   return (
     <Grid.Column style={{ width: '100%', border: 1, borderRadius: 10, background: '#fff', opacity: 0.9, padding: 20 }}>

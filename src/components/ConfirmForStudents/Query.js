@@ -1,5 +1,4 @@
 import React from 'react'
-// import url from '../../config/ReadUrl'
 import { Button } from 'antd';
 import axios from 'axios'
 import { useSubstrateState } from '../../substrate-lib'

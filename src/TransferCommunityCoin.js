@@ -6,20 +6,12 @@ import { useSubstrateState } from './substrate-lib'
 import { web3FromSource } from '@polkadot/extension-dapp'
 import { ContractPromise } from '@polkadot/api-contract'
 import { MoneyCollectOutlined } from '@ant-design/icons'
-// import url from './config/ReadUrl'
-// import { Select } from 'antd';
-// const { Option } = Select;
 //转社区币界面
 //转社区币界面
 //转社区币界面
 export default function Main(props) {
   const [formState, setFormState] = useState({ addressTo: '', amount: 0 })
   const [status, setStatus] = useState()
-  // eslint-disable-next-line no-unused-vars
-  const handleChange = (value) => {
-    console.log(`selected ${value}`);
-    // setCommNow(value)
-  };
   const onChange = (_, data) =>
     setFormState(prev => ({ ...prev, [data.state]: data.value }))
 
@@ -55,6 +47,7 @@ export default function Main(props) {
 
   const onTransfer = async () => {
     const fromAcct = await getFromAcct()
+    console.log(fromAcct);
     axios({
       method: 'get',
       url: 'https://db.timecoin.tech:21511/api/transferCommCoins',
@@ -63,8 +56,6 @@ export default function Main(props) {
       }
     })
       .then(response => {
-        console.log(props.commNow);
-        console.log(response);
         const value = 0;
         const gasLimit = 30000n * 1000000n;
         const abi = response.data.abi
@@ -117,15 +108,6 @@ export default function Main(props) {
           />
         </Form.Field>
         <Form.Field style={{ marginBottom: 0, textAlign: 'center' }}>
-        {/* <Select
-          placeholder='请选择社区'
-          style={{ width: 120, marginRight: 20 }}
-          onChange={onChange}
-        >
-          {props.comm.map(comm => (
-            <Option state='commNow' key={comm} value={comm}>{comm}</Option>
-          ))}
-        </Select> */}
         <Button style={{ borderColor: '#2185d0', color: '#2185d0', background: 'white', margin: 0, paddingTop: 4 }}
             disabled={amount === 0 || addressTo === '' ? true : false} onClick={onTransfer}>确认</Button>
         </Form.Field>
